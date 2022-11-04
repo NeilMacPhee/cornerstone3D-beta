@@ -88,7 +88,6 @@ declare namespace CONSTANTS {
     export {
         colormapsData as CPU_COLORMAPS,
         RENDERING_DEFAULTS,
-        mprCameraValues as MPR_CAMERA_VALUES,
         EPSILON
     }
 }

@@ -26,12 +26,31 @@ import type {
 } from '../types';
 import type { ViewportInput } from '../types/IViewport';
 import type IVolumeViewport from '../types/IVolumeViewport';
-import { RENDERING_DEFAULTS, MPR_CAMERA_VALUES, EPSILON } from '../constants';
+import { RENDERING_DEFAULTS, EPSILON } from '../constants';
 import { Events, BlendModes, OrientationAxis } from '../enums';
 import eventTarget from '../eventTarget';
 import type { vtkSlabCamera as vtkSlabCameraType } from './vtkClasses/vtkSlabCamera';
 import { imageIdToURI, triggerEvent } from '../utilities';
 import { VoiModifiedEventDetail } from '../types/EventTypes';
+import deepFreeze from '../utilities/deepFreeze';
+
+const ORIENTATION = {
+  axial: {
+    viewPlaneNormal: <Point3>[0, 0, -1],
+    viewUp: <Point3>[0, -1, 0],
+  },
+  sagittal: {
+    viewPlaneNormal: <Point3>[1, 0, 0],
+    viewUp: <Point3>[0, 0, 1],
+  },
+  coronal: {
+    viewPlaneNormal: <Point3>[0, 1, 0],
+    viewUp: <Point3>[0, 0, 1],
+  },
+};
+
+// Note: Object.freeze is only shallow, so we need to deepFreeze
+deepFreeze(ORIENTATION);
 
 /**
  * An object representing a VolumeViewport. VolumeViewports are used to render
