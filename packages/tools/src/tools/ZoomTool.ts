@@ -151,9 +151,13 @@ class ZoomTool extends BaseTool {
 
     // If it is a regular GPU accelerated viewport, then parallel scale
     // has a physical meaning and we can use that to determine the threshold
-    const imageData = viewport.getImageData();
+    // Added spacing preset in case there is no imageData on viewport
+    let spacing = [0.5, 0.5, 0.5];
+    if (viewport.getImageData()) {
+      const imageData = viewport.getImageData();
+      spacing = imageData.spacing;
+    }
 
-    const { spacing } = imageData;
     const { minZoomScale, maxZoomScale } = this.configuration;
 
     const t = element.clientHeight * spacing[1] * 0.5;
