@@ -163,16 +163,20 @@ class ZoomTool extends BaseTool {
     const t = element.clientHeight * spacing[1] * 0.5;
     const scale = t / parallelScaleToSet;
 
-    let cappedParallelScale = parallelScaleToSet;
-    let thresholdExceeded = false;
+    console.log(`Scale value: ${scale}`);
 
-    if (scale < minZoomScale) {
-      cappedParallelScale = t / minZoomScale;
-      thresholdExceeded = true;
-    } else if (scale >= maxZoomScale) {
-      cappedParallelScale = t / maxZoomScale;
-      thresholdExceeded = true;
-    }
+    const cappedParallelScale = parallelScaleToSet;
+    const thresholdExceeded = false;
+
+    // if (scale < minZoomScale) {
+    //   cappedParallelScale = t / minZoomScale;
+    //   thresholdExceeded = true;
+    // } else if (scale >= maxZoomScale) {
+    //   cappedParallelScale = t / maxZoomScale;
+    //   thresholdExceeded = true;
+    // }
+
+    // console.log(`Final scale: ${scale}`);
 
     viewport.setCamera({
       parallelScale: cappedParallelScale,
