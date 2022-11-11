@@ -3602,11 +3602,8 @@ interface ReferenceLineAnnotation extends Annotation {
 }
 
 // @public (undocumented)
-<<<<<<< HEAD
-class ReferenceLines extends AnnotationDisplayTool {
-=======
+
 export class ReferenceLinesTool extends AnnotationDisplayTool {
->>>>>>> c56df91a (feat: add reference lines tool (#292))
     constructor(toolProps?: PublicToolProps, defaultToolProps?: ToolProps);
     // (undocumented)
     editData: {
