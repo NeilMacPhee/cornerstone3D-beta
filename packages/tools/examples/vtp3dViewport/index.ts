@@ -55,16 +55,30 @@ const viewportGrid = document.createElement('div');
 
 viewportGrid.style.display = 'flex';
 viewportGrid.style.display = 'flex';
-viewportGrid.style.flexDirection = 'row';
+viewportGrid.style.flexDirection = 'grid';
 
 const element1 = document.createElement('div');
-
+const element2 = document.createElement('div');
+const element3 = document.createElement('div');
+const element4 = document.createElement('div');
 element1.oncontextmenu = () => false;
+element2.oncontextmenu = () => false;
+element3.oncontextmenu = () => false;
+element4.oncontextmenu = () => false;
 
 element1.style.width = size;
 element1.style.height = size;
+element2.style.width = size;
+element2.style.height = size;
+element3.style.width = size;
+element3.style.height = size;
+element4.style.width = size;
+element4.style.height = size;
 
 viewportGrid.appendChild(element1);
+viewportGrid.appendChild(element2);
+viewportGrid.appendChild(element3);
+viewportGrid.appendChild(element4);
 
 content.appendChild(viewportGrid);
 
@@ -180,35 +194,44 @@ async function run() {
       element: element1,
       defaultOptions: {
         orientation: Enums.OrientationAxis.AXIAL,
-        background: <Types.Point3>[0, 0, 0],
+        background: <Types.Point3>[0.2, 0, 0.2],
       },
     },
-    // {
-    //   viewportId: viewportIds[1],
-    //   type: ViewportType.ORTHOGRAPHIC,
-    //   element: element2,
-    //   defaultOptions: {
-    //     orientation: Enums.OrientationAxis.SAGITTAL,
-    //     background: <Types.Point3>[0.2, 0, 0.2],
-    //   },
-    // },
-    // {
-    //   viewportId: viewportIds[2],
-    //   type: ViewportType.ORTHOGRAPHIC,
-    //   element: element3,
-    //   defaultOptions: {
-    //     orientation: {
-    //       // Random oblique orientation
-    //       viewUp: <Types.Point3>[
-    //         -0.5962687530844388, 0.5453181550345819, -0.5891448751239446,
-    //       ],
-    //       viewPlaneNormal: <Types.Point3>[
-    //         -0.5962687530844388, 0.5453181550345819, -0.5891448751239446,
-    //       ],
-    //     },
-    //     background: <Types.Point3>[0.2, 0, 0.2],
-    //   },
-    // },
+    {
+      viewportId: viewportIds[1],
+      type: ViewportType.ORTHOGRAPHIC,
+      element: element2,
+      defaultOptions: {
+        orientation: Enums.OrientationAxis.SAGITTAL,
+        background: <Types.Point3>[0.2, 0, 0.2],
+      },
+    },
+    {
+      viewportId: viewportIds[2],
+      type: ViewportType.ORTHOGRAPHIC,
+      element: element3,
+      defaultOptions: {
+        orientation: {
+          // Random oblique orientation
+          viewUp: <Types.Point3>[
+            -0.5962687530844388, 0.5453181550345819, -0.5891448751239446,
+          ],
+          viewPlaneNormal: <Types.Point3>[
+            -0.5962687530844388, 0.5453181550345819, -0.5891448751239446,
+          ],
+        },
+        background: <Types.Point3>[0.2, 0, 0.2],
+      },
+    },
+    {
+      viewportId: viewportIds[3],
+      type: ViewportType.ORTHOGRAPHIC,
+      element: element4,
+      defaultOptions: {
+        orientation: Enums.OrientationAxis.AXIAL,
+        background: <Types.Point3>[0.2, 0, 0.2],
+      },
+    },
   ];
 
   renderingEngine.setViewports(viewportInputArray);
