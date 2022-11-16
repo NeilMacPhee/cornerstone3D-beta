@@ -55,7 +55,7 @@ const viewportGrid = document.createElement('div');
 
 viewportGrid.style.display = 'flex';
 viewportGrid.style.display = 'flex';
-viewportGrid.style.flexDirection = 'grid';
+viewportGrid.style.flexDirection = 'row';
 
 const element1 = document.createElement('div');
 const element2 = document.createElement('div');
@@ -183,8 +183,9 @@ async function run() {
   // Create the viewports
   const viewportIds = [
     'CT_AXIAL_STACK',
-    // 'CT_SAGITTAL_STACK',
-    // 'CT_OBLIQUE_STACK',
+    'CT_SAGITTAL_STACK',
+    'CT_OBLIQUE_STACK',
+    'VTP_3D',
   ];
 
   const viewportInputArray = [
@@ -236,6 +237,20 @@ async function run() {
 
   renderingEngine.setViewports(viewportInputArray);
 
+  // Define a volume in memory
+  const volume = await volumeLoader.createAndCacheVolume(volumeId, {
+    imageIds,
+  });
+
+  // Set the volume to load
+  volume.load();
+
+  setVolumesForViewports(
+    renderingEngine,
+    [{ volumeId }],
+    viewportIds.slice(0, 3)
+  );
+
   // Set the tool group on the viewports
   viewportIds.forEach((viewportId) =>
     toolGroup.addViewport(viewportId, 'myRenderingEngine')
@@ -247,7 +262,7 @@ async function run() {
   console.log(renderingEngine);
 
   const viewport = <Types.IVolumeViewport>(
-    renderingEngine.getViewport(viewportIds[0])
+    renderingEngine.getViewport(viewportIds[3])
   );
 
   console.log(`Viewport`);
