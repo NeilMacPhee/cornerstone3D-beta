@@ -45,8 +45,8 @@ const volumeId = `${volumeLoaderScheme}:${volumeName}`; // VolumeId with loader 
 
 // ======== Set up page ======== //
 setTitleAndDescription(
-  'Annotation Tools On Volumes',
-  'Here we demonstrate how annotation tools can be drawn/rendered on any plane.'
+  'VTP file loader demonstration',
+  'Here we demonstrate how the vtp file loader and renderer can be used with other viewports.'
 );
 
 const size = '500px';
@@ -90,7 +90,7 @@ content.appendChild(viewportGrid2);
 
 const instructions = document.createElement('p');
 instructions.innerText =
-  'Left Click to draw length measurements on any viewport.\n Use the mouse wheel to scroll through the stack.';
+  'Use scroll wheel to scrool through images on stack viewports, use left mouse button to rotate vtp image, hold and move right mouse button to zoom.';
 
 content.append(instructions);
 
