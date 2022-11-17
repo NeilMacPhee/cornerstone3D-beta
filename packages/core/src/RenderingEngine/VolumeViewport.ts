@@ -579,7 +579,7 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
     const focalPoint = <Point3>activeCamera.getFocalPoint();
 
     const actorEntries = this.getActors();
-    return;
+    // return;
     actorEntries.forEach((actorEntry) => {
       // we assume that the first two clipping plane of the mapper are always
       // the 'camera' clipping. Add clipping planes only if the actor is
@@ -672,7 +672,7 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
     });
 
     const currentCamera = this.getCamera();
-    // this.updateClippingPlanesForActors(currentCamera);
+    this.updateClippingPlanesForActors(currentCamera);
     this.triggerCameraModifiedEventIfNecessary(currentCamera, currentCamera);
   }
 
