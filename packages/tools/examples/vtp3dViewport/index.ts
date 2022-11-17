@@ -131,6 +131,7 @@ async function run() {
 
   // Define a tool group, which defines how mouse events map to tool commands for
   // Any viewport using the group
+  // Tool group for VTP loader
   const toolGroup = ToolGroupManager.createToolGroup(toolGroupId);
 
   // Add the tools to the tool group and specify which volume they are pointing at
@@ -159,9 +160,10 @@ async function run() {
     ],
   });
 
-  // As the Stack Scroll mouse wheel is a tool using the `mouseWheelCallback`
-  // hook instead of mouse buttons, it does not need to assign any mouse button.
-  toolGroup.setToolActive(StackScrollMouseWheelTool.toolName);
+  // Tool group for other viewports
+  const toolGroup2 = ToolGroupManager.createToolGroup('myToolGroup');
+  toolGroup2.addTool(StackScrollMouseWheelTool.toolName);
+  toolGroup2.setToolActive(StackScrollMouseWheelTool.toolName);
 
   // Get Cornerstone imageIds and fetch metadata into RAM
   const imageIds = await createImageIdsAndCacheMetaData({
@@ -195,7 +197,7 @@ async function run() {
       element: element1,
       defaultOptions: {
         orientation: Enums.OrientationAxis.AXIAL,
-        background: <Types.Point3>[0.2, 0, 0.2],
+        background: <Types.Point3>[0, 0, 0],
       },
     },
     {
@@ -204,7 +206,7 @@ async function run() {
       element: element2,
       defaultOptions: {
         orientation: Enums.OrientationAxis.SAGITTAL,
-        background: <Types.Point3>[0.2, 0, 0.2],
+        background: <Types.Point3>[0, 0, 0],
       },
     },
     {
@@ -212,16 +214,8 @@ async function run() {
       type: ViewportType.ORTHOGRAPHIC,
       element: element3,
       defaultOptions: {
-        orientation: {
-          // Random oblique orientation
-          viewUp: <Types.Point3>[
-            -0.5962687530844388, 0.5453181550345819, -0.5891448751239446,
-          ],
-          viewPlaneNormal: <Types.Point3>[
-            -0.5962687530844388, 0.5453181550345819, -0.5891448751239446,
-          ],
-        },
-        background: <Types.Point3>[0.2, 0, 0.2],
+        orientation: Enums.OrientationAxis.CORONAL,
+        background: <Types.Point3>[0, 0, 0],
       },
     },
     {
@@ -230,7 +224,7 @@ async function run() {
       element: element4,
       defaultOptions: {
         orientation: Enums.OrientationAxis.AXIAL,
-        background: <Types.Point3>[0.2, 0, 0.2],
+        background: <Types.Point3>[0, 0, 0],
       },
     },
   ];
@@ -252,9 +246,15 @@ async function run() {
   );
 
   // Set the tool group on the viewports
-  viewportIds.forEach((viewportId) =>
-    toolGroup.addViewport(viewportId, 'myRenderingEngine')
-  );
+  for (let i = 0; i < 3; i++) {
+    toolGroup2.addViewport(viewportIds[i], 'myRenderingEngine');
+  }
+
+  toolGroup.addViewport(viewportIds[3], 'myRenderingEngine');
+
+  // viewportIds.forEach((viewportId) =>
+  //   toolGroup.addViewport(viewportId, 'myRenderingEngine')
+  // );
 
   // Render the image
   renderingEngine.renderViewports(viewportIds);
@@ -267,7 +267,6 @@ async function run() {
 
   console.log(`Viewport`);
   console.log(viewport);
-  // console.log(viewport);
 
   getXML(url, viewport);
 }
