@@ -1,6 +1,6 @@
 {
   "name": "@cornerstonejs/tools",
-  "version": "0.28.0",
+  "version": "0.29.3",
   "description": "Cornerstone3D Tools",
   "main": "dist/umd/index.js",
   "types": "dist/esm/index.d.ts",
@@ -27,10 +27,14 @@
   },
   "dependencies": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@cornerstonejs/core": "^0.21.0",
 =======
     "@cornerstonejs/core": "^0.20.0",
 >>>>>>> 18aa4d82 (chore(release): publish [skip ci])
+=======
+    "@cornerstonejs/core": "^0.21.1",
+>>>>>>> 29db8298 (chore(release): publish [skip ci])
     "lodash.clonedeep": "4.5.0",
     "lodash.get": "^4.4.2"
   },
