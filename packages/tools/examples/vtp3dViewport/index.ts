@@ -94,6 +94,7 @@ instructions.innerText =
 
 content.append(instructions);
 
+// VTP file loader
 async function getXML(url, viewport) {
   const response = await fetch(url);
   const arrayBuffer = await response.arrayBuffer();
