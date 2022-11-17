@@ -51,11 +51,16 @@ setTitleAndDescription(
 
 const size = '500px';
 const content = document.getElementById('content');
-const viewportGrid = document.createElement('div');
+const viewportGrid1 = document.createElement('div');
+const viewportGrid2 = document.createElement('div');
 
-viewportGrid.style.display = 'flex';
-viewportGrid.style.display = 'flex';
-viewportGrid.style.flexDirection = 'row';
+viewportGrid1.style.display = 'flex';
+viewportGrid1.style.display = 'flex';
+viewportGrid1.style.flexDirection = 'row';
+
+viewportGrid2.style.display = 'flex';
+viewportGrid2.style.display = 'flex';
+viewportGrid2.style.flexDirection = 'row';
 
 const element1 = document.createElement('div');
 const element2 = document.createElement('div');
@@ -75,12 +80,13 @@ element3.style.height = size;
 element4.style.width = size;
 element4.style.height = size;
 
-viewportGrid.appendChild(element1);
-viewportGrid.appendChild(element2);
-viewportGrid.appendChild(element3);
-viewportGrid.appendChild(element4);
+viewportGrid1.appendChild(element1);
+viewportGrid1.appendChild(element2);
+viewportGrid2.appendChild(element3);
+viewportGrid2.appendChild(element4);
 
-content.appendChild(viewportGrid);
+content.appendChild(viewportGrid1);
+content.appendChild(viewportGrid2);
 
 const instructions = document.createElement('p');
 instructions.innerText =
