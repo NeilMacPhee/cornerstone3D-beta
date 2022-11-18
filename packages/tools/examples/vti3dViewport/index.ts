@@ -13,7 +13,7 @@ import {
 import * as cornerstoneTools from '@cornerstonejs/tools';
 import applyPreset from './applyPreset';
 import presets from './presets';
-import { vtiVolumeLoader } from '../../../core/examples/vtiVolumeLoader/vtiVolumeLoader';
+import { vtiVolumeLoader } from './vtiVolumeLoader';
 
 // This is for debugging purposes
 console.warn(
