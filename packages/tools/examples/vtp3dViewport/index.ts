@@ -95,6 +95,8 @@ instructions.innerText =
 content.append(instructions);
 
 // VTP file loader
+// Takes url and viewport as params, reads *.vtp file from url and creates a
+// vtkActor to be added to the input viewport
 async function getXML(url, viewport) {
   const response = await fetch(url);
   const arrayBuffer = await response.arrayBuffer();
@@ -110,8 +112,6 @@ async function getXML(url, viewport) {
     scalarVisibility: false,
   });
   const actor = vtkActor.newInstance();
-  console.log(`Actor info:`);
-  console.log(actor.getClassName());
   actor.setMapper(mapper);
   mapper.setInputData(source);
   viewport.setActors([{ uid: 'vtpActor', actor }]);
@@ -259,10 +259,6 @@ async function run() {
 
   toolGroup.addViewport(viewportIds[3], 'myRenderingEngine');
 
-  // viewportIds.forEach((viewportId) =>
-  //   toolGroup.addViewport(viewportId, 'myRenderingEngine')
-  // );
-
   // Render the image
   renderingEngine.renderViewports(viewportIds);
 
@@ -272,9 +268,7 @@ async function run() {
     renderingEngine.getViewport(viewportIds[3])
   );
 
-  console.log(`Viewport`);
-  console.log(viewport);
-
+  // adding vtp actor to viewport
   getXML(url, viewport);
 }
 
