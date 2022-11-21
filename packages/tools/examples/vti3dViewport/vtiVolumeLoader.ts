@@ -76,8 +76,8 @@ function vtiVolumeLoader(volumeId: string, { imageIds }) {
         const xml = true;
         tokens.shift();
         const url = tokens.join(':');
-        console.log('Url : ' + url);
-        console.log('Options : ');
+        // console.log('Url : ' + url);
+        // console.log('Options : ');
         // console.log(options);
         let reader;
         if (xml) reader = vtkXMLImageDataReader.newInstance();
