@@ -94,7 +94,7 @@ instructions.innerText =
 
 content.append(instructions);
 
-// VTP file loader
+// VTP file loader:
 // Takes url and viewport as params, reads *.vtp file from url and creates a
 // vtkActor to be added to the input viewport
 async function getXML(url, viewport) {
