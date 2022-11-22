@@ -3602,8 +3602,7 @@ interface ReferenceLineAnnotation extends Annotation {
 }
 
 // @public (undocumented)
-
-export class ReferenceLinesTool extends AnnotationDisplayTool {
+class ReferenceLines extends AnnotationDisplayTool {
     constructor(toolProps?: PublicToolProps, defaultToolProps?: ToolProps);
     // (undocumented)
     editData: {
@@ -3636,6 +3635,11 @@ export class ReferenceLinesTool extends AnnotationDisplayTool {
     // (undocumented)
     touchDragCallback: any;
 }
+<<<<<<< HEAD
+=======
+export { ReferenceLines }
+export { ReferenceLines as ReferenceLinesTool }
+>>>>>>> a923b6888e80838edc2253fb6a82f5827b90724e
 
 // @public (undocumented)
 function registerCursor(toolName: string, iconContent: string, viewBox: {

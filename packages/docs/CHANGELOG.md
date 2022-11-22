@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.7](https://github.com/cornerstonejs/cornerstone3D-beta/compare/docs@0.7.6...docs@0.7.7) (2022-11-21)
+
+**Note:** Version bump only for package docs
+
+
+
+
+
+## [0.7.6](https://github.com/cornerstonejs/cornerstone3D-beta/compare/docs@0.7.5...docs@0.7.6) (2022-11-19)
+
+**Note:** Version bump only for package docs
+
+
+
+
+
+## [0.7.5](https://github.com/cornerstonejs/cornerstone3D-beta/compare/docs@0.7.4...docs@0.7.5) (2022-11-18)
+
+**Note:** Version bump only for package docs
+
+
+
+
+
+## [0.7.4](https://github.com/cornerstonejs/cornerstone3D-beta/compare/docs@0.7.3...docs@0.7.4) (2022-11-17)
+
+**Note:** Version bump only for package docs
+
+
+
+
+
+## [0.7.3](https://github.com/cornerstonejs/cornerstone3D-beta/compare/docs@0.7.2...docs@0.7.3) (2022-11-16)
+
+**Note:** Version bump only for package docs
+
+
+
+
+
+## [0.7.2](https://github.com/cornerstonejs/cornerstone3D-beta/compare/docs@0.7.1...docs@0.7.2) (2022-11-14)
+
+**Note:** Version bump only for package docs
+
+
+
+
+
+## [0.7.1](https://github.com/cornerstonejs/cornerstone3D-beta/compare/docs@0.7.0...docs@0.7.1) (2022-11-11)
+
+**Note:** Version bump only for package docs
+
+
+
+
+
 # [0.7.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/docs@0.6.28...docs@0.7.0) (2022-11-11)
 
 
