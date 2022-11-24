@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/core@0.21.5...@cornerstonejs/core@0.22.0) (2022-11-23)
+
+
+### Features
+
+* add referenceCursors tool ([#275](https://github.com/cornerstonejs/cornerstone3D-beta/issues/275)) ([3303246](https://github.com/cornerstonejs/cornerstone3D-beta/commit/3303246836c81efb51e5d5e70c1a8801fbcb019a))
+
+
+
+
+
+## [0.21.5](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/core@0.21.4...@cornerstonejs/core@0.21.5) (2022-11-23)
+
+
+### Bug Fixes
+
+* stack viewport flip scroll ([#304](https://github.com/cornerstonejs/cornerstone3D-beta/issues/304)) ([5605a39](https://github.com/cornerstonejs/cornerstone3D-beta/commit/5605a39b17749f4f1d0bf6f3ee6f5ee9be492be8))
+
+
+
+
+
 ## [0.21.4](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/core@0.21.3...@cornerstonejs/core@0.21.4) (2022-11-21)
 
 

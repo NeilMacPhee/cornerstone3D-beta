@@ -152,9 +152,9 @@ class ZoomTool extends BaseTool {
     // If it is a regular GPU accelerated viewport, then parallel scale
     // has a physical meaning and we can use that to determine the threshold
     // Added spacing preset in case there is no imageData on viewport
-    let spacing = [0.5, 0.5, 0.5];
-    if (viewport.getImageData()) {
-      const imageData = viewport.getImageData();
+    const imageData = viewport.getImageData();
+    let spacing = [1, 1, 1];
+    if (imageData) {
       spacing = imageData.spacing;
     }
 
@@ -163,20 +163,18 @@ class ZoomTool extends BaseTool {
     const t = element.clientHeight * spacing[1] * 0.5;
     const scale = t / parallelScaleToSet;
 
-    console.log(`Scale value: ${scale}`);
+    let cappedParallelScale = parallelScaleToSet;
+    let thresholdExceeded = false;
 
-    const cappedParallelScale = parallelScaleToSet;
-    const thresholdExceeded = false;
-
-    // if (scale < minZoomScale) {
-    //   cappedParallelScale = t / minZoomScale;
-    //   thresholdExceeded = true;
-    // } else if (scale >= maxZoomScale) {
-    //   cappedParallelScale = t / maxZoomScale;
-    //   thresholdExceeded = true;
-    // }
-
-    // console.log(`Final scale: ${scale}`);
+    if (imageData) {
+      if (scale < minZoomScale) {
+        cappedParallelScale = t / minZoomScale;
+        thresholdExceeded = true;
+      } else if (scale >= maxZoomScale) {
+        cappedParallelScale = t / maxZoomScale;
+        thresholdExceeded = true;
+      }
+    }
 
     viewport.setCamera({
       parallelScale: cappedParallelScale,
