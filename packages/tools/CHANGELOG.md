@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.30.7](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.6...@cornerstonejs/tools@0.30.7) (2022-12-01)
+
+
+### Bug Fixes
+
+* Use queryselector instead of firstChild to get svg-layer ([#268](https://github.com/cornerstonejs/cornerstone3D-beta/issues/268)) ([1dd315c](https://github.com/cornerstonejs/cornerstone3D-beta/commit/1dd315c61476f7bca5640033f530bcc956d14307))
+
+
+
+
+
+## [0.30.6](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.5...@cornerstonejs/tools@0.30.6) (2022-12-01)
+
+**Note:** Version bump only for package @cornerstonejs/tools
+
+
+
+
+
+## [0.30.5](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.4...@cornerstonejs/tools@0.30.5) (2022-12-01)
+
+
+### Bug Fixes
+
+* bidirectional tool when short and long axis changes ([#309](https://github.com/cornerstonejs/cornerstone3D-beta/issues/309)) ([f973e72](https://github.com/cornerstonejs/cornerstone3D-beta/commit/f973e7262897a2daf4f37363d3e818ae88620bb8))
+
+
+
+
+
+## [0.30.4](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.3...@cornerstonejs/tools@0.30.4) (2022-12-01)
+
+
+### Bug Fixes
+
+* coronal view should not be flipped ([#321](https://github.com/cornerstonejs/cornerstone3D-beta/issues/321)) ([a85a867](https://github.com/cornerstonejs/cornerstone3D-beta/commit/a85a86785de9f225154829a4934926143c86eb5e))
+
+
+
+
+
+## [0.30.3](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.2...@cornerstonejs/tools@0.30.3) (2022-12-01)
+
+
+### Bug Fixes
+
+* htj2k and keymodifier ([#313](https://github.com/cornerstonejs/cornerstone3D-beta/issues/313)) ([48bd8a1](https://github.com/cornerstonejs/cornerstone3D-beta/commit/48bd8a14b81e31cba9f3237b0b68b7082bd66892))
+
+
+
+
+
+## [0.30.2](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.1...@cornerstonejs/tools@0.30.2) (2022-12-01)
+
+
+### Bug Fixes
+
+* filter planarFreeHandeROI based on parallel normals instead of equal normals. ([#315](https://github.com/cornerstonejs/cornerstone3D-beta/issues/315)) ([70e4ffa](https://github.com/cornerstonejs/cornerstone3D-beta/commit/70e4ffa0c28ed293473c6674d7b158c644f9b1be))
+* get correct imageData with targetId in BaseTool ([#294](https://github.com/cornerstonejs/cornerstone3D-beta/issues/294)) ([6e8e51b](https://github.com/cornerstonejs/cornerstone3D-beta/commit/6e8e51b4b3dde358134fcc7493237a59bec687ab))
+* If planar annotation is not visible, filter it ([#318](https://github.com/cornerstonejs/cornerstone3D-beta/issues/318)) ([ea8e32a](https://github.com/cornerstonejs/cornerstone3D-beta/commit/ea8e32a768d3f2d43fc0f1bc9b29388101825ad2))
+
+
+
+
+
 ## [0.30.1](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.0...@cornerstonejs/tools@0.30.1) (2022-11-24)
 
 
