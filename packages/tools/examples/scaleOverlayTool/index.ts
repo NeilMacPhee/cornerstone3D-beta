@@ -16,6 +16,7 @@ const {
   PanTool,
   ZoomTool,
   ToolGroupManager,
+  ScaleOverlayTool,
   Enums: csToolsEnums,
 } = cornerstoneTools;
 

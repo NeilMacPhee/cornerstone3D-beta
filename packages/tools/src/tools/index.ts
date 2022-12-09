@@ -10,6 +10,7 @@ import MIPJumpToClickTool from './MIPJumpToClickTool';
 import CrosshairsTool from './CrosshairsTool';
 import MagnifyTool from './MagnifyTool';
 import ReferenceLinesTool from './ReferenceLinesTool';
+import ScaleOverlayTool from './ScaleOverlayTool';
 //
 import BidirectionalTool from './annotation/BidirectionalTool';
 import LengthTool from './annotation/LengthTool';
@@ -71,4 +72,5 @@ export {
   BrushTool,
   MagnifyTool,
   ReferenceLines,
+  ScaleOverlayTool,
 };

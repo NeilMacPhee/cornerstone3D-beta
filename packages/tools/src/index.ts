@@ -52,6 +52,7 @@ import {
   MagnifyTool,
   ReferenceCursors,
   ReferenceLines,
+  ScaleOverlayTool,
 } from './tools';
 
 import * as Enums from './enums';
@@ -120,4 +121,6 @@ export {
   // Utilities
   utilities,
   cursors,
+  // TODO: find where to put the tool
+  ScaleOverlayTool,
 };
