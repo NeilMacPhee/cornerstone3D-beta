@@ -48,35 +48,37 @@ class ScaleOverlayTool extends BaseTool {
   }
   //DONE:
 
-  enabledCallback(element) {
-    this.forceImageUpdate(element);
-  }
+  // enabledCallback(element) {
+  //   this.forceImageUpdate(element);
+  // }
 
-  disabledCallback(element) {
-    this.forceImageUpdate(element);
-  }
+  // disabledCallback(element) {
+  //   this.forceImageUpdate(element);
+  // }
 
   forceImageUpdate(element) {
     //TODO: find modern version of update image
+    // eslint-disable-next-line no-debugger
+    debugger;
     const enabledElement = getEnabledElement(element);
 
-    if (enabledElement.image) {
-      external.cornerstone.updateImage(element);
-    }
+    // if (enabledElement.image) {
+    //   external.cornerstone.updateImage(element);
+    // }
   }
 
   renderToolData(evt) {
     const eventData = evt.detail;
 
-    const context = getNewContext(eventData.canvasContext.canvas);
+    const context = getContext(eventData.canvasContext.canvas);
     const { image, viewport, element } = eventData;
 
     let rowPixelSpacing = image.rowPixelSpacing;
     let colPixelSpacing = image.columnPixelSpacing;
-    const imagePlane = external.cornerstone.metaData.get(
-      'imagePlaneModule',
-      image.imageId
-    );
+    // const imagePlane = external.cornerstone.metaData.get(
+    //   'imagePlaneModule',
+    //   image.imageId
+    // );
 
     if (imagePlane) {
       rowPixelSpacing =
@@ -87,7 +89,7 @@ class ScaleOverlayTool extends BaseTool {
 
     // Check whether pixel spacing is defined
     if (!rowPixelSpacing || !colPixelSpacing) {
-      logger.warn(
+      console.log(
         `unable to define rowPixelSpacing or colPixelSpacing from data on ${this.name}'s renderToolData`
       );
 
@@ -116,8 +118,8 @@ class ScaleOverlayTool extends BaseTool {
       return;
     }
 
-    const color = toolColors.getToolColor();
-    const lineWidth = toolStyle.getToolWidth();
+    const color = 'white';
+    const lineWidth = 1;
 
     const imageAttributes = Object.assign(
       {},
@@ -152,36 +154,71 @@ class ScaleOverlayTool extends BaseTool {
       this.configuration
     );
 
-    draw(context, (context) => {
-      setShadow(context, imageAttributes);
+    // draw(context, (context) => {
+    //   setShadow(context, imageAttributes);
 
-      // Draw vertical line
-      drawLine(
-        context,
-        element,
-        imageAttributes.verticalLine.start,
-        imageAttributes.verticalLine.end,
-        {
-          color: imageAttributes.color,
-          lineWidth: imageAttributes.lineWidth,
-        },
-        'canvas'
-      );
-      drawVerticalScalebarIntervals(context, element, imageAttributes);
+    //   // Draw vertical line
+    //   drawLine(
+    //     context,
+    //     element,
+    //     imageAttributes.verticalLine.start,
+    //     imageAttributes.verticalLine.end,
+    //     {
+    //       color: imageAttributes.color,
+    //       lineWidth: imageAttributes.lineWidth,
+    //     },
+    //     'canvas'
+    //   );
+    //   drawVerticalScalebarIntervals(context, element, imageAttributes);
 
-      // Draw horizontal line
-      drawLine(
-        context,
-        element,
-        imageAttributes.horizontalLine.start,
-        imageAttributes.horizontalLine.end,
-        {
-          color: imageAttributes.color,
-          lineWidth: imageAttributes.lineWidth,
-        },
-        'canvas'
-      );
-      drawHorizontalScalebarIntervals(context, element, imageAttributes);
-    });
+    //   // Draw horizontal line
+    //   drawLine(
+    //     context,
+    //     element,
+    //     imageAttributes.horizontalLine.start,
+    //     imageAttributes.horizontalLine.end,
+    //     {
+    //       color: imageAttributes.color,
+    //       lineWidth: imageAttributes.lineWidth,
+    //     },
+    //     'canvas'
+    //   );
+    //   drawHorizontalScalebarIntervals(context, element, imageAttributes);
+    // });
   }
 }
+
+/**
+ * Computes the max bound for scales on the image
+ * @param  {{width: number, height: number}} canvasSize
+ * @param  {number} horizontalReduction
+ * @param  {number} verticalReduction
+ * @returns {Object.<string, { x:number, y:number }>}
+ */
+const computeScaleBounds = (
+  canvasSize,
+  horizontalReduction,
+  verticalReduction
+) => {
+  const hReduction = horizontalReduction * Math.min(1000, canvasSize.width);
+  const vReduction = verticalReduction * Math.min(1000, canvasSize.height);
+  const canvasBounds = {
+    left: hReduction,
+    top: vReduction,
+    width: canvasSize.width - 2 * hReduction,
+    height: canvasSize.height - 2 * vReduction,
+  };
+
+  return {
+    topLeft: {
+      x: canvasBounds.left,
+      y: canvasBounds.top,
+    },
+    bottomRight: {
+      x: canvasBounds.left + canvasBounds.width,
+      y: canvasBounds.top + canvasBounds.height,
+    },
+  };
+};
+
+export default ScaleOverlayTool;
