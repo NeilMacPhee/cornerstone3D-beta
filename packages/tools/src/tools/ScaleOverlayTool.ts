@@ -1,4 +1,4 @@
-import { BaseTool } from './base';
+import AnnotationDisplayTool from './base/AnnotationDisplayTool';
 import { Events } from '../enums';
 import {
   getEnabledElement,
@@ -6,9 +6,12 @@ import {
   VolumeViewport,
   utilities,
   getEnabledElementByIds,
+  getRenderingEngines,
 } from '@cornerstonejs/core';
+import { ReferenceLineAnnotation } from '../types/ToolSpecificAnnotationTypes';
 import type { Types } from '@cornerstonejs/core';
-import { drawLine } from '../drawingSvg';
+import { filterViewportsWithToolEnabled } from '../utilities/viewportFilters';
+import { drawLine as drawLineSvg } from '../drawingSvg';
 import {
   EventTypes,
   PublicToolProps,
@@ -22,6 +25,7 @@ import triggerAnnotationRenderForViewportIds from '../utilities/triggerAnnotatio
 import { state } from '../store';
 import { Enums } from '@cornerstonejs/core';
 import { getToolGroup } from '../store/ToolGroupManager';
+import { IPoints } from '../types';
 
 const SCALEOVERLAYTOOL_ID = 'scaleoverlay-viewport';
 
@@ -33,12 +37,26 @@ const SCALEOVERLAYTOOL_ID = 'scaleoverlay-viewport';
  * @classdesc Tool for displaying a scale overlay on the image.
  * @extends Tools.Base.BaseTool
  */
-class ScaleOverlayTool extends BaseTool {
+class ScaleOverlayTool extends AnnotationDisplayTool {
+  static toolName;
+
+  public touchDragCallback: any;
+  public mouseDragCallback: any;
+  _throttledCalculateCachedStats: any;
+  editData: {
+    renderingEngine: any;
+    sourceViewport: any;
+    annotation: ReferenceLineAnnotation;
+  } | null = {} as any;
+  isDrawing: boolean;
+  isHandleOutsideImage: boolean;
+
   constructor(
     toolProps: PublicToolProps = {},
     defaultToolProps: ToolProps = {
       supportedInteractionTypes: ['Mouse', 'Touch'],
       configuration: {
+        sourceViewportId: '',
         minorTickLength: 12.5,
         majorTickLength: 25,
       },
@@ -46,25 +64,61 @@ class ScaleOverlayTool extends BaseTool {
   ) {
     super(toolProps, defaultToolProps);
   }
-  //DONE:
+  //DONE: ---------
 
-  // enabledCallback(element) {
-  //   this.forceImageUpdate(element);
-  // }
+  _init = (): void => {
+    const renderingEngines = getRenderingEngines;
+    const renderingEngine = renderingEngines[0];
 
-  // disabledCallback(element) {
-  //   this.forceImageUpdate(element);
-  // }
+    if (!renderingEngine) {
+      return;
+    }
 
-  forceImageUpdate(element) {
-    //TODO: find modern version of update image
-    // eslint-disable-next-line no-debugger
-    debugger;
-    const enabledElement = getEnabledElement(element);
+    let viewports = renderingEngine.getViewports();
+    viewports = filterViewportsWithToolEnabled(viewports, this.getToolName());
 
-    // if (enabledElement.image) {
-    //   external.cornerstone.updateImage(element);
-    // }
+    const sourceViewport = renderingEngine.getViewport(
+      this.configuration.sourceViewportId
+    ) as Types.IVolumeViewport;
+
+    if (!sourceViewport) {
+      return;
+    }
+
+    const { element } = sourceViewport;
+    const { viewUp, viewPlaneNormal } = source.Viewport.getCamera();
+  };
+
+  /**
+   * Used to draw the scale annotation in each request animation
+   * frame.
+   *
+   * @param enabledElement - The Cornerstone's enabledElement.
+   * @param svgDrawingHelper - The svgDrawingHelper providing the context for drawing.
+   * @returns
+   */
+
+  renderAnnotation(
+    enabledElement: Types.IEnabledElement,
+    svgDrawingHelper: SVGDrawingHelper
+  ) {
+    const { viewport: targetViewport } = enabledElement;
+    const { annotation, sourceViewport } = this.editData;
+
+    const renderStatus = false;
+
+    if (!sourceViewport) {
+      return renderStatus;
+    }
+
+    const styleSpecifier: StyleSpecifier = {
+      toolGroupId: this.toolGroupId,
+      toolName: this.getToolName(),
+      viewportId: enabledElement.viewport.id,
+    };
+
+    console.log('Hello!');
+    return;
   }
 
   renderToolData(evt) {
@@ -89,7 +143,7 @@ class ScaleOverlayTool extends BaseTool {
 
     // Check whether pixel spacing is defined
     if (!rowPixelSpacing || !colPixelSpacing) {
-      console.log(
+      console.warn(
         `unable to define rowPixelSpacing or colPixelSpacing from data on ${this.name}'s renderToolData`
       );
 
@@ -221,4 +275,5 @@ const computeScaleBounds = (
   };
 };
 
+ScaleOverlayTool.toolName = 'ScaleOverlay';
 export default ScaleOverlayTool;
