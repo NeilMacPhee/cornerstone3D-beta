@@ -1,12 +1,14 @@
 import AnnotationDisplayTool from './base/AnnotationDisplayTool';
 import { Events } from '../enums';
 import {
+  metaData,
   getEnabledElement,
   StackViewport,
   VolumeViewport,
   utilities,
   getEnabledElementByIds,
   getRenderingEngines,
+  RenderingEngine,
 } from '@cornerstonejs/core';
 import { ReferenceLineAnnotation } from '../types/ToolSpecificAnnotationTypes';
 import type { Types } from '@cornerstonejs/core';
@@ -26,6 +28,7 @@ import { state } from '../store';
 import { Enums } from '@cornerstonejs/core';
 import { getToolGroup } from '../store/ToolGroupManager';
 import { IPoints } from '../types';
+import { element } from 'prop-types';
 
 const SCALEOVERLAYTOOL_ID = 'scaleoverlay-viewport';
 
@@ -65,6 +68,11 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     super(toolProps, defaultToolProps);
   }
   //DONE: ---------
+  check = true;
+
+  if(check) {
+    console.log('THIS RAN YOU CAN KEEP WORKINGT');
+  }
 
   _init = (): void => {
     const renderingEngines = getRenderingEngines;
@@ -85,8 +93,8 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       return;
     }
 
-    const { element } = sourceViewport;
-    const { viewUp, viewPlaneNormal } = source.Viewport.getCamera();
+    // const { element } = sourceViewport;
+    // const { viewUp, viewPlaneNormal } = source.Viewport.getCamera();
   };
 
   /**
@@ -102,12 +110,16 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     enabledElement: Types.IEnabledElement,
     svgDrawingHelper: SVGDrawingHelper
   ) {
-    const { viewport: targetViewport } = enabledElement;
+    const { viewport } = enabledElement;
     const { annotation, sourceViewport } = this.editData;
+    const { element } = viewport;
+    const image = viewport.getImageData();
+    const imageId = viewport.getCurrentImageId();
+    const canvas = enabledElement.viewport.canvas;
 
     const renderStatus = false;
 
-    if (!sourceViewport) {
+    if (!viewport) {
       return renderStatus;
     }
 
@@ -117,23 +129,12 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       viewportId: enabledElement.viewport.id,
     };
 
-    console.log('Hello!');
-    return;
-  }
+    let rowPixelSpacing = image.spacing[0];
+    let colPixelSpacing = image.spacing[1];
+    const imagePlane = metaData.get('imagePlaneModule', imageId);
+    console.log(imagePlane);
 
-  renderToolData(evt) {
-    const eventData = evt.detail;
-
-    const context = getContext(eventData.canvasContext.canvas);
-    const { image, viewport, element } = eventData;
-
-    let rowPixelSpacing = image.rowPixelSpacing;
-    let colPixelSpacing = image.columnPixelSpacing;
-    // const imagePlane = external.cornerstone.metaData.get(
-    //   'imagePlaneModule',
-    //   image.imageId
-    // );
-
+    // if imagePlane exists, set row and col pixel spacing
     if (imagePlane) {
       rowPixelSpacing =
         imagePlane.rowPixelSpacing || imagePlane.rowImagePixelSpacing;
@@ -144,101 +145,35 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     // Check whether pixel spacing is defined
     if (!rowPixelSpacing || !colPixelSpacing) {
       console.warn(
-        `unable to define rowPixelSpacing or colPixelSpacing from data on ${this.name}'s renderToolData`
+        `Unable to define rowPixelSpacing or colPixelSpacing from data on ScaleOverlayTool's renderAnnotation`
       );
-
       return;
     }
 
     const canvasSize = {
-      width: context.canvas.width,
-      height: context.canvas.height,
+      width: canvas.width,
+      height: canvas.height,
     };
 
+    // const zoomScale = 1.5 / size[1];
+    // const deltaY = deltaPoints.canvas[1];
+    // const k = deltaY * zoomScale;
+
+    // let parallelScaleToSet = (1.0 - k) * parallelScale;
+    // const t = element.clientHeight * colPixelSpacing * 0.5;
+    // const scale = t / parallelScaleToSet;
+
     // Distance between intervals is 10mm
-    const verticalIntervalScale = (10.0 / rowPixelSpacing) * viewport.scale;
-    const horizontalIntervalScale = (10.0 / colPixelSpacing) * viewport.scale;
+    // const verticalIntervalScale = (10.0 / rowPixelSpacing) * viewport.scale;
+    // const horizontalIntervalScale = (10.0 / colPixelSpacing) * viewport.scale;
 
     // 0.1 and 0.05 gives margin to horizontal and vertical lines
     const hscaleBounds = computeScaleBounds(canvasSize, 0.25, 0.05);
     const vscaleBounds = computeScaleBounds(canvasSize, 0.05, 0.15);
 
-    if (
-      !canvasSize.width ||
-      !canvasSize.height ||
-      !hscaleBounds ||
-      !vscaleBounds
-    ) {
-      return;
-    }
+    console.log(viewport);
 
-    const color = 'white';
-    const lineWidth = 1;
-
-    const imageAttributes = Object.assign(
-      {},
-      {
-        hscaleBounds,
-        vscaleBounds,
-        verticalMinorTick: verticalIntervalScale,
-        horizontalMinorTick: horizontalIntervalScale,
-        verticalLine: {
-          start: {
-            x: vscaleBounds.bottomRight.x,
-            y: vscaleBounds.topLeft.y,
-          },
-          end: {
-            x: vscaleBounds.bottomRight.x,
-            y: vscaleBounds.bottomRight.y,
-          },
-        },
-        horizontalLine: {
-          start: {
-            x: hscaleBounds.topLeft.x,
-            y: hscaleBounds.bottomRight.y,
-          },
-          end: {
-            x: hscaleBounds.bottomRight.x,
-            y: hscaleBounds.bottomRight.y,
-          },
-        },
-        color,
-        lineWidth,
-      },
-      this.configuration
-    );
-
-    // draw(context, (context) => {
-    //   setShadow(context, imageAttributes);
-
-    //   // Draw vertical line
-    //   drawLine(
-    //     context,
-    //     element,
-    //     imageAttributes.verticalLine.start,
-    //     imageAttributes.verticalLine.end,
-    //     {
-    //       color: imageAttributes.color,
-    //       lineWidth: imageAttributes.lineWidth,
-    //     },
-    //     'canvas'
-    //   );
-    //   drawVerticalScalebarIntervals(context, element, imageAttributes);
-
-    //   // Draw horizontal line
-    //   drawLine(
-    //     context,
-    //     element,
-    //     imageAttributes.horizontalLine.start,
-    //     imageAttributes.horizontalLine.end,
-    //     {
-    //       color: imageAttributes.color,
-    //       lineWidth: imageAttributes.lineWidth,
-    //     },
-    //     'canvas'
-    //   );
-    //   drawHorizontalScalebarIntervals(context, element, imageAttributes);
-    // });
+    return;
   }
 }
 
