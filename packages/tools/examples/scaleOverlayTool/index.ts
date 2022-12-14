@@ -12,7 +12,6 @@ console.warn(
 );
 
 const {
-  MagnifyTool,
   PanTool,
   ZoomTool,
   ToolGroupManager,
@@ -25,7 +24,7 @@ const { MouseBindings } = csToolsEnums;
 
 // ======== Set up page ======== //
 setTitleAndDescription(
-  'Magnify Tool',
+  'Scale Overlay Tool',
   'Magnify Tool to zoom in in part of the viewport (StackViewport only as of now)'
 );
 
@@ -57,28 +56,31 @@ async function run() {
   await initDemo();
 
   // Add tools to Cornerstone3D
-  cornerstoneTools.addTool(MagnifyTool);
   cornerstoneTools.addTool(PanTool);
   cornerstoneTools.addTool(ZoomTool);
+  cornerstoneTools.addTool(ScaleOverlayTool);
+
+  // Create a stack viewport
+  const viewportId = 'CT_STACK';
+  const viewportInput = {
+    viewportId,
+    type: ViewportType.STACK,
+    element,
+  };
 
   // Define a tool group, which defines how mouse events map to tool commands for
   // Any viewport using the group
   const toolGroup = ToolGroupManager.createToolGroup(toolGroupId);
 
   // Add the tools to the tool group, TODO: add scaleOverlayTool
-  toolGroup.addTool(MagnifyTool.toolName);
   toolGroup.addTool(PanTool.toolName);
   toolGroup.addTool(ZoomTool.toolName);
+  toolGroup.addTool(ScaleOverlayTool.toolName, {
+    sourceViewportId: viewportId,
+  });
 
   // Set the initial state of the tools, here we set one tool active on left click.
   // This means left click will draw that tool.
-  toolGroup.setToolActive(MagnifyTool.toolName, {
-    bindings: [
-      {
-        mouseButton: MouseBindings.Primary, // Left Click
-      },
-    ],
-  });
 
   toolGroup.setToolActive(PanTool.toolName, {
     bindings: [
@@ -96,6 +98,12 @@ async function run() {
     ],
   });
 
+  const setScaleEnabled = () => {
+    toolGroup.setToolEnabled(ScaleOverlayTool.toolName);
+  };
+
+  setTimeout(setScaleEnabled, 1000);
+
   // Get Cornerstone imageIds and fetch metadata into RAM
   const imageIds = await createImageIdsAndCacheMetaData({
     StudyInstanceUID:
@@ -109,14 +117,6 @@ async function run() {
   // Instantiate a rendering engine
   const renderingEngineId = 'myRenderingEngine';
   const renderingEngine = new RenderingEngine(renderingEngineId);
-
-  // Create a stack viewport
-  const viewportId = 'CT_STACK';
-  const viewportInput = {
-    viewportId,
-    type: ViewportType.STACK,
-    element,
-  };
 
   renderingEngine.enableElement(viewportInput);
 
