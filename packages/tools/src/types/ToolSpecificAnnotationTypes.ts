@@ -275,10 +275,8 @@ export interface ReferenceLineAnnotation extends Annotation {
 
 export interface ScaleOverlayAnnotation extends Annotation {
   data: {
-    text: string;
     handles: {
       points: Types.Point3[];
-      arrowFirst: boolean;
       activeHandleIndex: number | null;
       textBox: {
         hasMoved: boolean;
