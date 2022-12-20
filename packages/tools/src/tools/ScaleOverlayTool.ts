@@ -9,10 +9,12 @@ import {
   getEnabledElementByIds,
   getRenderingEngines,
   RenderingEngine,
+  utilities as csUtils,
 } from '@cornerstonejs/core';
-import { ReferenceLineAnnotation } from '../types/ToolSpecificAnnotationTypes';
+import { ScaleOverlayAnnotation } from '../types/ToolSpecificAnnotationTypes';
 import type { Types } from '@cornerstonejs/core';
 import { filterViewportsWithToolEnabled } from '../utilities/viewportFilters';
+import { addAnnotation } from '../stateManagement/annotation/annotationState';
 import { drawLine as drawLineSvg } from '../drawingSvg';
 import {
   EventTypes,
@@ -29,6 +31,7 @@ import { Enums } from '@cornerstonejs/core';
 import { getToolGroup } from '../store/ToolGroupManager';
 import { IPoints } from '../types';
 import { element } from 'prop-types';
+import { StyleSpecifier } from '../types/AnnotationStyle';
 
 const SCALEOVERLAYTOOL_ID = 'scaleoverlay-viewport';
 
@@ -48,8 +51,8 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
   _throttledCalculateCachedStats: any;
   editData: {
     renderingEngine: any;
-    sourceViewport: any;
-    annotation: ReferenceLineAnnotation;
+    viewport: any;
+    annotation: ScaleOverlayAnnotation;
   } | null = {} as any;
   isDrawing: boolean;
   isHandleOutsideImage: boolean;
@@ -59,7 +62,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     defaultToolProps: ToolProps = {
       supportedInteractionTypes: ['Mouse', 'Touch'],
       configuration: {
-        sourceViewportId: '',
+        viewportId: '',
         minorTickLength: 12.5,
         majorTickLength: 25,
       },
@@ -68,16 +71,15 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     super(toolProps, defaultToolProps);
   }
   //DONE: ---------
-  check = true;
-
-  if(check) {
-    console.log('THIS RAN YOU CAN KEEP WORKINGT');
-  }
 
   _init = (): void => {
-    const renderingEngines = getRenderingEngines;
+    const renderingEngines = getRenderingEngines();
     const renderingEngine = renderingEngines[0];
 
+    console.log('init has been run');
+
+    console.log(renderingEngines);
+    console.log(renderingEngine);
     if (!renderingEngine) {
       return;
     }
@@ -85,16 +87,68 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     let viewports = renderingEngine.getViewports();
     viewports = filterViewportsWithToolEnabled(viewports, this.getToolName());
 
-    const sourceViewport = renderingEngine.getViewport(
-      this.configuration.sourceViewportId
-    ) as Types.IVolumeViewport;
+    console.log(viewports);
 
-    if (!sourceViewport) {
+    const viewport = viewports[0];
+    console.log(viewport);
+
+    if (!viewport) {
       return;
     }
 
-    // const { element } = sourceViewport;
-    // const { viewUp, viewPlaneNormal } = source.Viewport.getCamera();
+    const { element } = viewport;
+    const { viewUp, viewPlaneNormal } = viewport.getCamera();
+
+    const viewportCanvasCornersInWorld =
+      csUtils.getViewportImageCornersInWorld(viewport);
+
+    console.log(viewportCanvasCornersInWorld);
+
+    let annotation = this.editData.annotation;
+
+    if (!annotation) {
+      const newAnnotation: ScaleOverlayAnnotation = {
+        metadata: {
+          toolName: this.getToolName(),
+          viewPlaneNormal: <Types.Point3>[...viewPlaneNormal],
+          viewUp: <Types.Point3>[...viewUp],
+          FrameOfReferenceUID: viewport.getFrameOfReferenceUID(),
+          referencedImageId: null,
+        },
+        data: {
+          handles: {
+            points: viewportCanvasCornersInWorld,
+          },
+        },
+      };
+
+      addAnnotation(element, newAnnotation);
+      annotation = newAnnotation;
+    } else {
+      this.editData.annotation.data.handles.points =
+        viewportCanvasCornersInWorld;
+    }
+
+    this.editData = {
+      viewport,
+      renderingEngine,
+      annotation,
+    };
+
+    // triggerAnnotationRenderForViewportIds(renderingEngine, viewports);
+  };
+
+  onSetToolEnabled = (): void => {
+    console.log('Tool has been enabled');
+    this._init();
+  };
+
+  onCameraModified = (evt: Types.EventTypes.CameraModifiedEvent): void => {
+    // If the camera is modified, we need to update the reference lines
+    // we really don't care which viewport triggered the
+    // camera modification, since we want to update all of them
+    // with respect to the targetViewport
+    this._init();
   };
 
   /**
@@ -110,12 +164,16 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     enabledElement: Types.IEnabledElement,
     svgDrawingHelper: SVGDrawingHelper
   ) {
-    const { viewport } = enabledElement;
-    const { annotation, sourceViewport } = this.editData;
+    // const { viewport } = enabledElement;
+    const { annotation, viewport } = this.editData;
+
     const { element } = viewport;
     const image = viewport.getImageData();
     const imageId = viewport.getCurrentImageId();
     const canvas = enabledElement.viewport.canvas;
+
+    const viewportCanvasCornersInWorld =
+      csUtils.getViewportImageCornersInWorld(viewport);
 
     const renderStatus = false;
 
@@ -132,7 +190,6 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     let rowPixelSpacing = image.spacing[0];
     let colPixelSpacing = image.spacing[1];
     const imagePlane = metaData.get('imagePlaneModule', imageId);
-    console.log(imagePlane);
 
     // if imagePlane exists, set row and col pixel spacing
     if (imagePlane) {
@@ -155,60 +212,54 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       height: canvas.height,
     };
 
-    // const zoomScale = 1.5 / size[1];
-    // const deltaY = deltaPoints.canvas[1];
-    // const k = deltaY * zoomScale;
+    const topLeft = viewportCanvasCornersInWorld[0];
+    const topRight = viewportCanvasCornersInWorld[1];
+    const bottomLeft = viewportCanvasCornersInWorld[2];
+    const bottomRight = viewportCanvasCornersInWorld[3];
 
-    // let parallelScaleToSet = (1.0 - k) * parallelScale;
-    // const t = element.clientHeight * colPixelSpacing * 0.5;
-    // const scale = t / parallelScaleToSet;
-
-    // Distance between intervals is 10mm
-    // const verticalIntervalScale = (10.0 / rowPixelSpacing) * viewport.scale;
-    // const horizontalIntervalScale = (10.0 / colPixelSpacing) * viewport.scale;
+    const worldWidthViewport = Math.abs(bottomLeft[0] - bottomRight[0]);
+    console.log(worldWidthViewport / 10);
 
     // 0.1 and 0.05 gives margin to horizontal and vertical lines
-    const hscaleBounds = computeScaleBounds(canvasSize, 0.25, 0.05);
-    const vscaleBounds = computeScaleBounds(canvasSize, 0.05, 0.15);
+    const hscaleBounds = this.computeScaleBounds(canvasSize, 0.25, 0.05);
+    const vscaleBounds = this.computeScaleBounds(canvasSize, 0.05, 0.15);
 
-    console.log(viewport);
+    console.log(hscaleBounds);
+
+    const lineUID = '1';
 
     return;
   }
+
+  /**
+   * Computes the max bound for scales on the image
+   * @param  {{width: number, height: number}} canvasSize
+   * @param  {number} horizontalReduction
+   * @param  {number} verticalReduction
+   * @returns {Object.<string, { x:number, y:number }>}
+   */
+  computeScaleBounds = (canvasSize, horizontalReduction, verticalReduction) => {
+    const hReduction = horizontalReduction * Math.min(1000, canvasSize.width);
+    const vReduction = verticalReduction * Math.min(1000, canvasSize.height);
+    const canvasBounds = {
+      left: hReduction,
+      top: vReduction,
+      width: canvasSize.width - 2 * hReduction,
+      height: canvasSize.height - 2 * vReduction,
+    };
+
+    return {
+      topLeft: {
+        x: canvasBounds.left,
+        y: canvasBounds.top,
+      },
+      bottomRight: {
+        x: canvasBounds.left + canvasBounds.width,
+        y: canvasBounds.top + canvasBounds.height,
+      },
+    };
+  };
 }
-
-/**
- * Computes the max bound for scales on the image
- * @param  {{width: number, height: number}} canvasSize
- * @param  {number} horizontalReduction
- * @param  {number} verticalReduction
- * @returns {Object.<string, { x:number, y:number }>}
- */
-const computeScaleBounds = (
-  canvasSize,
-  horizontalReduction,
-  verticalReduction
-) => {
-  const hReduction = horizontalReduction * Math.min(1000, canvasSize.width);
-  const vReduction = verticalReduction * Math.min(1000, canvasSize.height);
-  const canvasBounds = {
-    left: hReduction,
-    top: vReduction,
-    width: canvasSize.width - 2 * hReduction,
-    height: canvasSize.height - 2 * vReduction,
-  };
-
-  return {
-    topLeft: {
-      x: canvasBounds.left,
-      y: canvasBounds.top,
-    },
-    bottomRight: {
-      x: canvasBounds.left + canvasBounds.width,
-      y: canvasBounds.top + canvasBounds.height,
-    },
-  };
-};
 
 ScaleOverlayTool.toolName = 'ScaleOverlay';
 export default ScaleOverlayTool;
