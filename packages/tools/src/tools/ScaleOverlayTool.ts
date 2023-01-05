@@ -212,24 +212,91 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       height: canvas.height,
     };
 
-    const topLeft = viewportCanvasCornersInWorld[0];
-    const topRight = viewportCanvasCornersInWorld[1];
-    const bottomLeft = viewportCanvasCornersInWorld[2];
-    const bottomRight = viewportCanvasCornersInWorld[3];
+    const topLeft = annotation.data.handles.points[0];
+    const topRight = annotation.data.handles.points[1];
+    const bottomLeft = annotation.data.handles.points[2];
+    const bottomRight = annotation.data.handles.points[3];
 
     const worldWidthViewport = Math.abs(bottomLeft[0] - bottomRight[0]);
     console.log(worldWidthViewport / 10);
 
     // 0.1 and 0.05 gives margin to horizontal and vertical lines
     const hscaleBounds = this.computeScaleBounds(canvasSize, 0.25, 0.05);
-    const vscaleBounds = this.computeScaleBounds(canvasSize, 0.05, 0.15);
+    const vscaleBounds = this.computeScaleBounds(canvasSize, 0.05, 0.05);
+    // const canvasCoordinates = [topLeft, bottomRight].map((world) =>
+    //   viewport.worldToCanvas(world)
+    // );
 
-    console.log(hscaleBounds);
+    let canvasCoordinates;
 
+    if (worldWidthViewport < 600) {
+      canvasCoordinates = [
+        [-100, 0, topRight[2]],
+        [100, 0, topRight[2]],
+      ].map((world) => viewport.worldToCanvas(world));
+    } else {
+      canvasCoordinates = [
+        [-200, 0, topRight[2]],
+        [200, 0, topRight[2]],
+      ].map((world) => viewport.worldToCanvas(world));
+    }
+
+    const newCanvasCoordinates = this.computeCanvasScaleCoordinates(
+      canvasSize,
+      canvasCoordinates,
+      vscaleBounds
+    );
+    console.log(newCanvasCoordinates);
+
+    const { annotationUID } = annotation;
+
+    styleSpecifier.annotationUID = annotationUID;
+    const lineWidth = this.getStyle('lineWidth', styleSpecifier, annotation);
+    const lineDash = this.getStyle('lineDash', styleSpecifier, annotation);
+    const color = this.getStyle('color', styleSpecifier, annotation);
+    const shadow = this.getStyle('shadow', styleSpecifier, annotation);
+
+    const dataId = `${annotationUID}-line`;
     const lineUID = '1';
+    drawLineSvg(
+      svgDrawingHelper,
+      annotationUID,
+      lineUID,
+      newCanvasCoordinates[0],
+      newCanvasCoordinates[1],
+      {
+        color,
+        width: lineWidth,
+        lineDash,
+        shadow,
+      },
+      dataId
+    );
 
-    return;
+    return renderStatus;
   }
+
+  /**
+   * Computes the centered canvas coordinates for scale
+   * @param canvasSize
+   * @param canvasCoordinates
+   * @param vscaleBounds
+   * @returns newCanvasCoordinates
+   */
+  computeCanvasScaleCoordinates = (
+    canvasSize,
+    canvasCoordinates,
+    vscaleBounds
+  ) => {
+    const worldDistanceOnCanvas =
+      canvasCoordinates[0][0] - canvasCoordinates[1][0];
+    const newCanvasCoordinates = [
+      [canvasSize.width / 2 - worldDistanceOnCanvas / 2, vscaleBounds.height],
+      [canvasSize.width / 2 + worldDistanceOnCanvas / 2, vscaleBounds.height],
+    ];
+
+    return newCanvasCoordinates;
+  };
 
   /**
    * Computes the max bound for scales on the image
@@ -241,25 +308,46 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
   computeScaleBounds = (canvasSize, horizontalReduction, verticalReduction) => {
     const hReduction = horizontalReduction * Math.min(1000, canvasSize.width);
     const vReduction = verticalReduction * Math.min(1000, canvasSize.height);
-    const canvasBounds = {
-      left: hReduction,
-      top: vReduction,
-      width: canvasSize.width - 2 * hReduction,
-      height: canvasSize.height - 2 * vReduction,
+    const scaleBounds = {
+      height: canvasSize.height - vReduction,
+      width: canvasSize.width - hReduction,
     };
 
     return {
-      topLeft: {
-        x: canvasBounds.left,
-        y: canvasBounds.top,
-      },
-      bottomRight: {
-        x: canvasBounds.left + canvasBounds.width,
-        y: canvasBounds.top + canvasBounds.height,
-      },
+      height: scaleBounds.height,
+      width: scaleBounds.width,
     };
   };
 }
+//   /**
+//    * Computes the max bound for scales on the image
+//    * @param  {{width: number, height: number}} canvasSize
+//    * @param  {number} horizontalReduction
+//    * @param  {number} verticalReduction
+//    * @returns {Object.<string, { x:number, y:number }>}
+//    */
+//   computeScaleBounds = (canvasSize, horizontalReduction, verticalReduction) => {
+//     const hReduction = horizontalReduction * Math.min(1000, canvasSize.width);
+//     const vReduction = verticalReduction * Math.min(1000, canvasSize.height);
+//     const canvasBounds = {
+//       left: hReduction,
+//       top: vReduction,
+//       width: canvasSize.width - 2 * hReduction,
+//       height: canvasSize.height - 2 * vReduction,
+//     };
+
+//     return {
+//       topLeft: {
+//         x: canvasBounds.left,
+//         y: canvasBounds.top,
+//       },
+//       bottomRight: {
+//         x: canvasBounds.left + canvasBounds.width,
+//         y: canvasBounds.top + canvasBounds.height,
+//       },
+//     };
+//   };
+// }
 
 ScaleOverlayTool.toolName = 'ScaleOverlay';
 export default ScaleOverlayTool;
