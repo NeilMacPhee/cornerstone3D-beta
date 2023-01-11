@@ -165,9 +165,6 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     const imageId = viewport.getCurrentImageId();
     const canvas = enabledElement.viewport.canvas;
 
-    const viewportCanvasCornersInWorld =
-      csUtils.getViewportImageCornersInWorld(viewport);
-
     const renderStatus = false;
 
     if (!viewport) {
@@ -345,7 +342,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     return renderStatus;
   }
 
-  _getTextLines(scaleSize): string[] | undefined {
+  _getTextLines(scaleSize: number): string[] | undefined {
     let scaleSizeDisplayValue;
     let scaleSizeUnits;
     if (scaleSize >= 50) {
@@ -367,7 +364,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
    * @returns currentScaleSize
    */
   computeScaleSize = (worldWidthViewport) => {
-    const scaleSizes = [1000, 500, 250, 100, 50, 25, 10, 5];
+    const scaleSizes = [2000, 1000, 500, 250, 100, 50, 25, 10, 5];
     const currentScaleSize = scaleSizes.filter(
       (scaleSize) =>
         scaleSize < worldWidthViewport * 0.6 &&
