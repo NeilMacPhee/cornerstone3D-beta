@@ -52,7 +52,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
         viewportId: '',
         minorTickLength: 12.5,
         majorTickLength: 25,
-        scaleLocation: 'top',
+        scaleLocation: 'bottom',
       },
     }
   ) {
@@ -142,9 +142,11 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     enabledElement: Types.IEnabledElement,
     svgDrawingHelper: SVGDrawingHelper
   ) {
+    if (!this.editData.viewport) {
+      return;
+    }
     // const { viewport } = enabledElement;
     const location = this.configuration.scaleLocation;
-    console.log(location);
     const { annotation, viewport } = this.editData;
 
     const { element } = viewport;
@@ -195,8 +197,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     const bottomRight = annotation.data.handles.points[3];
 
     const worldWidthViewport = Math.abs(bottomLeft[0] - bottomRight[0]);
-    const worldHeightViewport = Math.abs(topLeft[0] - bottomLeft[0]);
-    // console.log(worldWidthViewport / 10);
+    const worldHeightViewport = Math.abs(topLeft[1] - bottomLeft[1]);
 
     // 0.1 and 0.05 gives margin to horizontal and vertical lines
     const hscaleBounds = this.computeScaleBounds(
@@ -211,9 +212,6 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       0.05,
       location
     );
-    // const canvasCoordinates = [topLeft, bottomRight].map((world) =>
-    //   viewport.worldToCanvas(world)
-    // );
 
     const scaleSize = this.computeScaleSize(
       worldWidthViewport,
@@ -221,10 +219,16 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       location
     );
 
-    const canvasCoordinates = [
-      [-scaleSize / 2, 0, topRight[2]],
-      [scaleSize / 2, 0, topRight[2]],
-    ].map((world) => viewport.worldToCanvas(world));
+    const canvasCoordinates = this.computeWorldScaleCoordinates(
+      scaleSize,
+      location,
+      topRight
+    ).map((world) => viewport.worldToCanvas(world));
+
+    // const canvasCoordinates = [
+    //   [-scaleSize / 2, 0, topRight[2]],
+    //   [scaleSize / 2, 0, topRight[2]],
+    // ].map((world) => viewport.worldToCanvas(world));
 
     const scaleCanvasCoordinates = this.computeCanvasScaleCoordinates(
       canvasSize,
@@ -298,9 +302,16 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       rightTickId
     );
 
+    const locationTextOffest = {
+      bottom: [-10, -42],
+      top: [-12, -35],
+      left: [-40, -20],
+      right: [-50, -20],
+    };
+
     const textCanvasCoordinates = [
-      scaleCanvasCoordinates[0][0] - 10,
-      scaleCanvasCoordinates[0][1] - 42,
+      scaleCanvasCoordinates[0][0] + locationTextOffest[location][0],
+      scaleCanvasCoordinates[0][1] + locationTextOffest[location][1],
     ];
     const textLines = this._getTextLines(scaleSize);
 
@@ -400,44 +411,46 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
    * @returns leftTick, rightTick
    */
   computeEndScaleTicks = (canvasCoordinates, location) => {
-    let endTick1, endTick2;
-    if (location == 'bottom') {
-      endTick1 = [
-        [canvasCoordinates[1][0], canvasCoordinates[1][1]],
-        [canvasCoordinates[1][0], canvasCoordinates[1][1] - 10],
-      ];
-      endTick2 = [
-        [canvasCoordinates[0][0], canvasCoordinates[0][1]],
-        [canvasCoordinates[0][0], canvasCoordinates[0][1] - 10],
-      ];
-    } else if (location == 'top') {
-      endTick1 = [
-        [canvasCoordinates[1][0], canvasCoordinates[1][1]],
-        [canvasCoordinates[1][0], canvasCoordinates[1][1] + 10],
-      ];
-      endTick2 = [
-        [canvasCoordinates[0][0], canvasCoordinates[0][1]],
-        [canvasCoordinates[0][0], canvasCoordinates[0][1] + 10],
-      ];
-    } else if (location == 'left') {
-      endTick1 = [
-        [canvasCoordinates[1][0], canvasCoordinates[1][1] - 10],
-        [canvasCoordinates[1][0], canvasCoordinates[1][1]],
-      ];
-      endTick2 = [
-        [canvasCoordinates[0][0], canvasCoordinates[0][1] - 10],
-        [canvasCoordinates[0][0], canvasCoordinates[0][1]],
-      ];
-    } else if (location == 'right') {
-      endTick1 = [
-        [canvasCoordinates[1][0], canvasCoordinates[1][1] + 10],
-        [canvasCoordinates[1][0], canvasCoordinates[1][1]],
-      ];
-      endTick2 = [
-        [canvasCoordinates[0][0], canvasCoordinates[0][1] + 10],
-        [canvasCoordinates[0][0], canvasCoordinates[0][1]],
-      ];
-    }
+    const locationTickOffset = {
+      bottom: [
+        [0, -10],
+        [0, -10],
+      ],
+      top: [
+        [0, 10],
+        [0, 10],
+      ],
+      left: [
+        [0, 0],
+        [10, 0],
+      ],
+      right: [
+        [0, 0],
+        [-10, 0],
+      ],
+    };
+
+    const endTick1 = [
+      [
+        canvasCoordinates[1][0] + locationTickOffset[location][0][0],
+        canvasCoordinates[1][1] + locationTickOffset[location][0][0],
+      ],
+      [
+        canvasCoordinates[1][0] + locationTickOffset[location][1][0],
+        canvasCoordinates[1][1] + locationTickOffset[location][1][1],
+      ],
+    ];
+    const endTick2 = [
+      [
+        canvasCoordinates[0][0] + locationTickOffset[location][0][0],
+        canvasCoordinates[0][1] + locationTickOffset[location][0][0],
+      ],
+      [
+        canvasCoordinates[0][0] + locationTickOffset[location][1][0],
+        canvasCoordinates[0][1] + locationTickOffset[location][1][1],
+      ],
+    ];
+
     return {
       endTick1: endTick1,
       endTick2: endTick2,
@@ -451,8 +464,12 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     leftTick,
     rightTick
   ) => {
-    // let numberSmallTicks;
-    const canvasScaleSize = rightTick[0][0] - leftTick[0][0];
+    let canvasScaleSize;
+    if (location == 'bottom' || location == 'top') {
+      canvasScaleSize = rightTick[0][0] - leftTick[0][0];
+    } else if (location == 'left' || location == 'right') {
+      canvasScaleSize = rightTick[0][1] - leftTick[0][1];
+    }
     const tickIds = [];
     const tickUIDs = [];
     const tickCoordinates = [];
@@ -474,8 +491,14 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
           [tickSpacing * (i + 1), 0],
           [tickSpacing * (i + 1), -5],
         ],
-        left: [0, tickSpacing * (i + 1)],
-        right: [0, tickSpacing * -(i + 1)],
+        left: [
+          [0, tickSpacing * (i + 1)],
+          [-5, tickSpacing * (i + 1)],
+        ],
+        right: [
+          [0, tickSpacing * (i + 1)],
+          [5, tickSpacing * (i + 1)],
+        ],
       };
       tickIds.push(`${annotationUID}-tick${i}`);
       tickUIDs.push(`tick${i}`);
@@ -485,7 +508,10 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
             leftTick[0][0] + locationOffset[location][0][0],
             leftTick[0][1] + locationOffset[location][0][1],
           ],
-          [leftTick[1][0] + locationOffset[location][1][0], leftTick[1][1]],
+          [
+            leftTick[1][0] + locationOffset[location][0][0],
+            leftTick[1][1] + locationOffset[location][0][1],
+          ],
         ]);
       } else {
         tickCoordinates.push([
@@ -503,6 +529,24 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
 
     return { tickIds, tickUIDs, tickCoordinates };
   };
+
+  computeWorldScaleCoordinates = (scaleSize, location, topRight) => {
+    let worldCoordinates;
+    if (location == 'top' || location == 'bottom') {
+      worldCoordinates = [
+        [-scaleSize / 2, 0, topRight[2]],
+        [scaleSize / 2, 0, topRight[2]],
+      ];
+    } else if (location == 'left' || location == 'right') {
+      worldCoordinates = [
+        [0, -scaleSize / 2, topRight[2]],
+        [0, scaleSize / 2, topRight[2]],
+      ];
+    }
+
+    return worldCoordinates;
+  };
+
   /**
    * Computes the centered canvas coordinates for scale
    * @param canvasSize
@@ -517,12 +561,22 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     hscaleBounds,
     location
   ) => {
-    const worldDistanceOnCanvas =
-      canvasCoordinates[0][0] - canvasCoordinates[1][0];
-    const scaleCanvasCoordinates = [
-      [canvasSize.width / 2 - worldDistanceOnCanvas / 2, vscaleBounds.height],
-      [canvasSize.width / 2 + worldDistanceOnCanvas / 2, vscaleBounds.height],
-    ];
+    let scaleCanvasCoordinates;
+    if (location == 'top' || location == 'bottom') {
+      const worldDistanceOnCanvas =
+        canvasCoordinates[0][0] - canvasCoordinates[1][0];
+      scaleCanvasCoordinates = [
+        [canvasSize.width / 2 - worldDistanceOnCanvas / 2, vscaleBounds.height],
+        [canvasSize.width / 2 + worldDistanceOnCanvas / 2, vscaleBounds.height],
+      ];
+    } else if (location == 'left' || location == 'right') {
+      const worldDistanceOnCanvas =
+        canvasCoordinates[0][1] - canvasCoordinates[1][1];
+      scaleCanvasCoordinates = [
+        [hscaleBounds.width, canvasSize.height / 2 - worldDistanceOnCanvas / 2],
+        [hscaleBounds.width, canvasSize.height / 2 + worldDistanceOnCanvas / 2],
+      ];
+    }
 
     return scaleCanvasCoordinates;
   };
@@ -545,25 +599,27 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     const locationBounds = {
       bottom: [-vReduction, -hReduction],
       top: [vReduction, hReduction],
+      left: [vReduction, hReduction],
+      right: [-vReduction, -hReduction],
     };
     const canvasBounds = {
       bottom: [canvasSize.height, canvasSize.width],
       top: [0, canvasSize.width],
-    };
-    const scaleBounds = {
-      height: canvasSize.height - vReduction,
-      width: canvasSize.width - hReduction,
+      left: [canvasSize.height, 0],
+      right: [canvasSize.height, canvasSize.width],
     };
 
-    // return {
-    //   height: scaleBounds.height,
-    //   width: scaleBounds.width,
-    // };
     return {
       height: canvasBounds[location][0] + locationBounds[location][0],
-      width: canvasBounds[location][1] + locationBounds[location][0],
+      width: canvasBounds[location][1] + locationBounds[location][1],
     };
   };
+
+  _changeScaleLocation(newLocation) {
+    console.log(newLocation);
+    const location = this.configuration.scaleLocation;
+    console.log(location);
+  }
 }
 
 ScaleOverlayTool.toolName = 'ScaleOverlay';
