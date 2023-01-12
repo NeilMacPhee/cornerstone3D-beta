@@ -3,6 +3,7 @@ import {
   initDemo,
   createImageIdsAndCacheMetaData,
   setTitleAndDescription,
+  addDropdownToToolbar,
 } from '../../../../utils/demo/helpers';
 import * as cornerstoneTools from '@cornerstonejs/tools';
 
@@ -16,6 +17,7 @@ const {
   ZoomTool,
   ToolGroupManager,
   ScaleOverlayTool,
+  LengthTool,
   Enums: csToolsEnums,
 } = cornerstoneTools;
 
@@ -48,6 +50,28 @@ content.append(instructions);
 
 const toolGroupId = 'STACK_TOOL_GROUP_ID';
 
+// add dropdown tool bar to select scale location
+const scaleLocations = ['bottom', 'top', 'left', 'right'];
+let currentScaleLocation = scaleLocations[0];
+let toolGroup;
+
+addDropdownToToolbar({
+  options: { values: scaleLocations, defaultValue: scaleLocations[0] },
+  onSelectedValueChange: (newSelectedScaleLocation) => {
+    currentScaleLocation = newSelectedScaleLocation as string;
+
+    toolGroup.setToolConfiguration(
+      ScaleOverlayTool.toolName,
+      {
+        scaleLocation: currentScaleLocation,
+      },
+      true //overwrite
+    );
+
+    toolGroup.setToolEnabled(ScaleOverlayTool.toolName);
+  },
+});
+
 /**
  * Runs the demo
  */
@@ -59,6 +83,7 @@ async function run() {
   cornerstoneTools.addTool(PanTool);
   cornerstoneTools.addTool(ZoomTool);
   cornerstoneTools.addTool(ScaleOverlayTool);
+  cornerstoneTools.addTool(LengthTool);
 
   // Create a stack viewport
   const viewportId = 'CT_STACK';
@@ -70,17 +95,26 @@ async function run() {
 
   // Define a tool group, which defines how mouse events map to tool commands for
   // Any viewport using the group
-  const toolGroup = ToolGroupManager.createToolGroup(toolGroupId);
+  toolGroup = ToolGroupManager.createToolGroup(toolGroupId);
 
   // Add the tools to the tool group, TODO: add scaleOverlayTool
   toolGroup.addTool(PanTool.toolName);
   toolGroup.addTool(ZoomTool.toolName);
+  toolGroup.addTool(LengthTool.toolName);
   toolGroup.addTool(ScaleOverlayTool.toolName, {
     sourceViewportId: viewportId,
   });
 
   // Set the initial state of the tools, here we set one tool active on left click.
   // This means left click will draw that tool.
+
+  toolGroup.setToolActive(LengthTool.toolName, {
+    bindings: [
+      {
+        mouseButton: MouseBindings.Primary, // Left click
+      },
+    ],
+  });
 
   toolGroup.setToolActive(PanTool.toolName, {
     bindings: [
@@ -98,11 +132,9 @@ async function run() {
     ],
   });
 
-  const setScaleEnabled = () => {
-    toolGroup.setToolEnabled(ScaleOverlayTool.toolName);
-  };
+  toolGroup.setToolEnabled(ScaleOverlayTool.toolName);
 
-  setTimeout(setScaleEnabled, 1000);
+  // setTimeout(setScaleEnabled, 1500);
 
   // Get Cornerstone imageIds and fetch metadata into RAM
   const imageIds = await createImageIdsAndCacheMetaData({
