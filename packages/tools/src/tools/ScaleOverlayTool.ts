@@ -1,4 +1,5 @@
 import AnnotationDisplayTool from './base/AnnotationDisplayTool';
+import { vec3 } from 'gl-matrix';
 import {
   metaData,
   getRenderingEngines,
@@ -50,15 +51,13 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       supportedInteractionTypes: ['Mouse', 'Touch'],
       configuration: {
         viewportId: '',
-        minorTickLength: 12.5,
-        majorTickLength: 25,
         scaleLocation: 'bottom',
+        scaleColor: 'yellow',
       },
     }
   ) {
     super(toolProps, defaultToolProps);
   }
-  //DONE: ---------
 
   _init = (): void => {
     const renderingEngines = getRenderingEngines();
@@ -145,11 +144,8 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     if (!this.editData.viewport) {
       return;
     }
-    // const { viewport } = enabledElement;
     const location = this.configuration.scaleLocation;
     const { annotation, viewport } = this.editData;
-
-    const { element } = viewport;
     const image = viewport.getImageData();
     const imageId = viewport.getCurrentImageId();
     const canvas = enabledElement.viewport.canvas;
@@ -168,7 +164,19 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
 
     let rowPixelSpacing = image.spacing[0];
     let colPixelSpacing = image.spacing[1];
+    let currentView;
     const imagePlane = metaData.get('imagePlaneModule', imageId);
+
+    // for (let k = 0; k < Object.keys(imageOrientationViews).length; k++) {
+    //   if (
+    //     imagePlane.imageOrientationPatient.toString() ===
+    //     Object.values(imageOrientationViews)[k].toString()
+    //   ) {
+    //     currentView = Object.keys(imageOrientationViews)[k];
+    //   }
+    // }
+
+    // console.log(currentView);
 
     // if imagePlane exists, set row and col pixel spacing
     if (imagePlane) {
@@ -196,8 +204,10 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     const bottomLeft = annotation.data.handles.points[2];
     const bottomRight = annotation.data.handles.points[3];
 
-    const worldWidthViewport = Math.abs(bottomLeft[0] - bottomRight[0]);
-    const worldHeightViewport = Math.abs(topLeft[1] - bottomLeft[1]);
+    const pointSet1 = [topLeft, bottomLeft, topRight, bottomRight];
+
+    const worldWidthViewport = vec3.distance(bottomLeft, bottomRight);
+    const worldHeightViewport = vec3.distance(topLeft, bottomLeft);
 
     // 0.1 and 0.05 gives margin to horizontal and vertical lines
     const hscaleBounds = this.computeScaleBounds(
@@ -222,13 +232,9 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     const canvasCoordinates = this.computeWorldScaleCoordinates(
       scaleSize,
       location,
-      topRight
+      topRight,
+      pointSet1
     ).map((world) => viewport.worldToCanvas(world));
-
-    // const canvasCoordinates = [
-    //   [-scaleSize / 2, 0, topRight[2]],
-    //   [scaleSize / 2, 0, topRight[2]],
-    // ].map((world) => viewport.worldToCanvas(world));
 
     const scaleCanvasCoordinates = this.computeCanvasScaleCoordinates(
       canvasSize,
@@ -248,6 +254,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     styleSpecifier.annotationUID = annotationUID;
     const lineWidth = this.getStyle('lineWidth', styleSpecifier, annotation);
     const lineDash = this.getStyle('lineDash', styleSpecifier, annotation);
+    // const color = this.configuration.scaleColor;
     const color = this.getStyle('color', styleSpecifier, annotation);
     const shadow = this.getStyle('shadow', styleSpecifier, annotation);
 
@@ -354,6 +361,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
         lineDash: '2,3',
         lineWidth: '1',
         shadow: true,
+        color: color,
       }
     );
 
@@ -530,17 +538,76 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     return { tickIds, tickUIDs, tickCoordinates };
   };
 
-  computeWorldScaleCoordinates = (scaleSize, location, topRight) => {
+  computeWorldScaleCoordinates = (scaleSize, location, topRight, pointSet) => {
     let worldCoordinates;
+    let topBottomVec = vec3.subtract(vec3.create(), pointSet[0], pointSet[1]);
+    topBottomVec = vec3.normalize(vec3.create(), topBottomVec) as Types.Point3;
+
+    let topRightVec = vec3.subtract(vec3.create(), pointSet[2], pointSet[0]);
+    topRightVec = vec3.normalize(vec3.create(), topRightVec);
+
+    const midpointLocation = {
+      bottom: [pointSet[1], pointSet[2]],
+      top: [pointSet[0], pointSet[3]],
+      right: [pointSet[2], pointSet[3]],
+      left: [pointSet[0], pointSet[1]],
+    };
+
+    const midpoint = vec3
+      .add(
+        vec3.create(),
+        midpointLocation[location][0],
+        midpointLocation[location][0]
+      )
+      .map((i) => i / 2) as Types.Point3;
+
+    const offset =
+      scaleSize /
+      2 /
+      Math.sqrt(
+        Math.pow(topBottomVec[0], 2) +
+          Math.pow(topBottomVec[1], 2) +
+          Math.pow(topBottomVec[2], 2)
+      );
+
+    const testest = [
+      vec3.add(
+        vec3.create(),
+        midpoint,
+        topBottomVec.map((i) => i * offset) as Types.Point3
+      ),
+      vec3.subtract(
+        vec3.create(),
+        midpoint,
+        topBottomVec.map((i) => i * offset) as Types.Point3
+      ),
+    ];
+
     if (location == 'top' || location == 'bottom') {
       worldCoordinates = [
-        [-scaleSize / 2, 0, topRight[2]],
-        [scaleSize / 2, 0, topRight[2]],
+        vec3.subtract(
+          vec3.create(),
+          midpoint,
+          topRightVec.map((i) => i * offset) as Types.Point3
+        ),
+        vec3.add(
+          vec3.create(),
+          midpoint,
+          topRightVec.map((i) => i * offset) as Types.Point3
+        ),
       ];
     } else if (location == 'left' || location == 'right') {
       worldCoordinates = [
-        [0, -scaleSize / 2, topRight[2]],
-        [0, scaleSize / 2, topRight[2]],
+        vec3.add(
+          vec3.create(),
+          midpoint,
+          topBottomVec.map((i) => i * offset) as Types.Point3
+        ),
+        vec3.subtract(
+          vec3.create(),
+          midpoint,
+          topBottomVec.map((i) => i * offset) as Types.Point3
+        ),
       ];
     }
 
@@ -614,12 +681,6 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       width: canvasBounds[location][1] + locationBounds[location][1],
     };
   };
-
-  _changeScaleLocation(newLocation) {
-    console.log(newLocation);
-    const location = this.configuration.scaleLocation;
-    console.log(location);
-  }
 }
 
 ScaleOverlayTool.toolName = 'ScaleOverlay';
