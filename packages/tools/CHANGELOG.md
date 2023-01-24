@@ -3,203 +3,205 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.30.7](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.6...@cornerstonejs/tools@0.30.7) (2022-12-01)
+## [0.36.4](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.36.3...@cornerstonejs/tools@0.36.4) (2023-01-23)
 
+**Note:** Version bump only for package @cornerstonejs/tools
+
+## [0.36.3](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.36.2...@cornerstonejs/tools@0.36.3) (2023-01-20)
 
 ### Bug Fixes
 
-* Use queryselector instead of firstChild to get svg-layer ([#268](https://github.com/cornerstonejs/cornerstone3D-beta/issues/268)) ([1dd315c](https://github.com/cornerstonejs/cornerstone3D-beta/commit/1dd315c61476f7bca5640033f530bcc956d14307))
+- tool bindings with different modifier keys ([#377](https://github.com/cornerstonejs/cornerstone3D-beta/issues/377)) ([c95ba60](https://github.com/cornerstonejs/cornerstone3D-beta/commit/c95ba60e0045eac33e889985e2a340f2ce543dc2))
 
+## [0.36.2](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.36.1...@cornerstonejs/tools@0.36.2) (2023-01-20)
 
+**Note:** Version bump only for package @cornerstonejs/tools
 
+## [0.36.1](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.36.0...@cornerstonejs/tools@0.36.1) (2023-01-20)
 
+**Note:** Version bump only for package @cornerstonejs/tools
+
+# [0.36.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.35.2...@cornerstonejs/tools@0.36.0) (2023-01-16)
+
+### Features
+
+- add multiframe example ([#331](https://github.com/cornerstonejs/cornerstone3D-beta/issues/331)) ([327f17a](https://github.com/cornerstonejs/cornerstone3D-beta/commit/327f17a551f869c8f454566782be720367291235))
+
+## [0.35.2](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.35.1...@cornerstonejs/tools@0.35.2) (2023-01-13)
+
+### Bug Fixes
+
+- floodFill export in tools ([#362](https://github.com/cornerstonejs/cornerstone3D-beta/issues/362)) ([700baa3](https://github.com/cornerstonejs/cornerstone3D-beta/commit/700baa349f59c12b4a10979b580ee3afd9637f9e))
+
+## [0.35.1](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.35.0...@cornerstonejs/tools@0.35.1) (2023-01-13)
+
+**Note:** Version bump only for package @cornerstonejs/tools
+
+# [0.35.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.34.2...@cornerstonejs/tools@0.35.0) (2023-01-12)
+
+### Features
+
+- ROI threshold to consider two volumes for thresholding ([#325](https://github.com/cornerstonejs/cornerstone3D-beta/issues/325)) ([87362af](https://github.com/cornerstonejs/cornerstone3D-beta/commit/87362af8008b08fd874ffbb5188d415d9a71abdd))
+
+## [0.34.2](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.34.1...@cornerstonejs/tools@0.34.2) (2023-01-12)
+
+### Bug Fixes
+
+- unexpected token problem for typescript for tools ([#360](https://github.com/cornerstonejs/cornerstone3D-beta/issues/360)) ([7844798](https://github.com/cornerstonejs/cornerstone3D-beta/commit/78447981ed583ef97f8f7cbed247cd6c3b1419a6))
+
+## [0.34.1](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.34.0...@cornerstonejs/tools@0.34.1) (2023-01-11)
+
+**Note:** Version bump only for package @cornerstonejs/tools
+
+# [0.34.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.33.0...@cornerstonejs/tools@0.34.0) (2023-01-06)
+
+### Features
+
+- **volumeLoader:** no need for streaming-wadors imageLoader anymore since streaming volume loader will use cswil wadors image loader ([#340](https://github.com/cornerstonejs/cornerstone3D-beta/issues/340)) ([0b5f785](https://github.com/cornerstonejs/cornerstone3D-beta/commit/0b5f785041a6f92443b58f6d72c8c965a29b35fc))
+
+# [0.33.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.32.3...@cornerstonejs/tools@0.33.0) (2023-01-06)
+
+### Features
+
+- improved example runner to handle casing and partial match ([#347](https://github.com/cornerstonejs/cornerstone3D-beta/issues/347)) ([9e8fa12](https://github.com/cornerstonejs/cornerstone3D-beta/commit/9e8fa122f766c1fceff4e3d4fe3cd0f68963c92b))
+
+## [0.32.3](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.32.2...@cornerstonejs/tools@0.32.3) (2023-01-04)
+
+### Bug Fixes
+
+- AngleTool not working after cancellation ([#342](https://github.com/cornerstonejs/cornerstone3D-beta/issues/342)) ([a82c0bc](https://github.com/cornerstonejs/cornerstone3D-beta/commit/a82c0bc0e8beb6d47131ad2cd5040b93b02f2de9))
+
+## [0.32.2](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.32.1...@cornerstonejs/tools@0.32.2) (2023-01-03)
+
+### Bug Fixes
+
+- could not access 'index' before initialization ([#337](https://github.com/cornerstonejs/cornerstone3D-beta/issues/337)) ([f4b7ff8](https://github.com/cornerstonejs/cornerstone3D-beta/commit/f4b7ff8a147a2fbebac3ae66d0b24f28c1910387))
+
+## [0.32.1](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.32.0...@cornerstonejs/tools@0.32.1) (2022-12-16)
+
+### Bug Fixes
+
+- Add coplanar check in stackImageSync callback ([#335](https://github.com/cornerstonejs/cornerstone3D-beta/issues/335)) ([f806177](https://github.com/cornerstonejs/cornerstone3D-beta/commit/f806177d628664150b02e941c3a802b58bdc5293))
+
+# [0.32.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.31.0...@cornerstonejs/tools@0.32.0) (2022-12-09)
+
+### Features
+
+- Add new 3D volume viewport ([#281](https://github.com/cornerstonejs/cornerstone3D-beta/issues/281)) ([57cf7ac](https://github.com/cornerstonejs/cornerstone3D-beta/commit/57cf7ac3bfd83d35d68f54b1f00f03583ed8e998))
+
+# [0.31.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.7...@cornerstonejs/tools@0.31.0) (2022-12-08)
+
+### Features
+
+- enable having multiple instances of the same tool and add more seg tools ([#327](https://github.com/cornerstonejs/cornerstone3D-beta/issues/327)) ([7ff05c5](https://github.com/cornerstonejs/cornerstone3D-beta/commit/7ff05c5519243632d9d9113e3c84cf9e10725193))
+
+## [0.30.7](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.6...@cornerstonejs/tools@0.30.7) (2022-12-01)
+
+### Bug Fixes
+
+- Use queryselector instead of firstChild to get svg-layer ([#268](https://github.com/cornerstonejs/cornerstone3D-beta/issues/268)) ([1dd315c](https://github.com/cornerstonejs/cornerstone3D-beta/commit/1dd315c61476f7bca5640033f530bcc956d14307))
 
 ## [0.30.6](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.5...@cornerstonejs/tools@0.30.6) (2022-12-01)
 
 **Note:** Version bump only for package @cornerstonejs/tools
 
-
-
-
-
 ## [0.30.5](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.4...@cornerstonejs/tools@0.30.5) (2022-12-01)
-
 
 ### Bug Fixes
 
-* bidirectional tool when short and long axis changes ([#309](https://github.com/cornerstonejs/cornerstone3D-beta/issues/309)) ([f973e72](https://github.com/cornerstonejs/cornerstone3D-beta/commit/f973e7262897a2daf4f37363d3e818ae88620bb8))
-
-
-
-
+- bidirectional tool when short and long axis changes ([#309](https://github.com/cornerstonejs/cornerstone3D-beta/issues/309)) ([f973e72](https://github.com/cornerstonejs/cornerstone3D-beta/commit/f973e7262897a2daf4f37363d3e818ae88620bb8))
 
 ## [0.30.4](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.3...@cornerstonejs/tools@0.30.4) (2022-12-01)
 
-
 ### Bug Fixes
 
-* coronal view should not be flipped ([#321](https://github.com/cornerstonejs/cornerstone3D-beta/issues/321)) ([a85a867](https://github.com/cornerstonejs/cornerstone3D-beta/commit/a85a86785de9f225154829a4934926143c86eb5e))
-
-
-
-
+- coronal view should not be flipped ([#321](https://github.com/cornerstonejs/cornerstone3D-beta/issues/321)) ([a85a867](https://github.com/cornerstonejs/cornerstone3D-beta/commit/a85a86785de9f225154829a4934926143c86eb5e))
 
 ## [0.30.3](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.2...@cornerstonejs/tools@0.30.3) (2022-12-01)
 
-
 ### Bug Fixes
 
-* htj2k and keymodifier ([#313](https://github.com/cornerstonejs/cornerstone3D-beta/issues/313)) ([48bd8a1](https://github.com/cornerstonejs/cornerstone3D-beta/commit/48bd8a14b81e31cba9f3237b0b68b7082bd66892))
-
-
-
-
+- htj2k and keymodifier ([#313](https://github.com/cornerstonejs/cornerstone3D-beta/issues/313)) ([48bd8a1](https://github.com/cornerstonejs/cornerstone3D-beta/commit/48bd8a14b81e31cba9f3237b0b68b7082bd66892))
 
 ## [0.30.2](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.1...@cornerstonejs/tools@0.30.2) (2022-12-01)
 
-
 ### Bug Fixes
 
-* filter planarFreeHandeROI based on parallel normals instead of equal normals. ([#315](https://github.com/cornerstonejs/cornerstone3D-beta/issues/315)) ([70e4ffa](https://github.com/cornerstonejs/cornerstone3D-beta/commit/70e4ffa0c28ed293473c6674d7b158c644f9b1be))
-* get correct imageData with targetId in BaseTool ([#294](https://github.com/cornerstonejs/cornerstone3D-beta/issues/294)) ([6e8e51b](https://github.com/cornerstonejs/cornerstone3D-beta/commit/6e8e51b4b3dde358134fcc7493237a59bec687ab))
-* If planar annotation is not visible, filter it ([#318](https://github.com/cornerstonejs/cornerstone3D-beta/issues/318)) ([ea8e32a](https://github.com/cornerstonejs/cornerstone3D-beta/commit/ea8e32a768d3f2d43fc0f1bc9b29388101825ad2))
-
-
-
-
+- filter planarFreeHandeROI based on parallel normals instead of equal normals. ([#315](https://github.com/cornerstonejs/cornerstone3D-beta/issues/315)) ([70e4ffa](https://github.com/cornerstonejs/cornerstone3D-beta/commit/70e4ffa0c28ed293473c6674d7b158c644f9b1be))
+- get correct imageData with targetId in BaseTool ([#294](https://github.com/cornerstonejs/cornerstone3D-beta/issues/294)) ([6e8e51b](https://github.com/cornerstonejs/cornerstone3D-beta/commit/6e8e51b4b3dde358134fcc7493237a59bec687ab))
+- If planar annotation is not visible, filter it ([#318](https://github.com/cornerstonejs/cornerstone3D-beta/issues/318)) ([ea8e32a](https://github.com/cornerstonejs/cornerstone3D-beta/commit/ea8e32a768d3f2d43fc0f1bc9b29388101825ad2))
 
 ## [0.30.1](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.30.0...@cornerstonejs/tools@0.30.1) (2022-11-24)
 
-
 ### Bug Fixes
 
-* ZoomTool fix for polyData actors with no imageData ([#308](https://github.com/cornerstonejs/cornerstone3D-beta/issues/308)) ([1350eca](https://github.com/cornerstonejs/cornerstone3D-beta/commit/1350eca3cdc8d456642c6497dd2b2460a3584c7e))
-
-
-
-
+- ZoomTool fix for polyData actors with no imageData ([#308](https://github.com/cornerstonejs/cornerstone3D-beta/issues/308)) ([1350eca](https://github.com/cornerstonejs/cornerstone3D-beta/commit/1350eca3cdc8d456642c6497dd2b2460a3584c7e))
 
 # [0.30.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.29.8...@cornerstonejs/tools@0.30.0) (2022-11-23)
 
-
 ### Features
 
-* add referenceCursors tool ([#275](https://github.com/cornerstonejs/cornerstone3D-beta/issues/275)) ([3303246](https://github.com/cornerstonejs/cornerstone3D-beta/commit/3303246836c81efb51e5d5e70c1a8801fbcb019a))
-
-
-
-
+- add referenceCursors tool ([#275](https://github.com/cornerstonejs/cornerstone3D-beta/issues/275)) ([3303246](https://github.com/cornerstonejs/cornerstone3D-beta/commit/3303246836c81efb51e5d5e70c1a8801fbcb019a))
 
 ## [0.29.8](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.29.7...@cornerstonejs/tools@0.29.8) (2022-11-23)
 
 **Note:** Version bump only for package @cornerstonejs/tools
 
-
-
-
-
 ## [0.29.7](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.29.6...@cornerstonejs/tools@0.29.7) (2022-11-23)
-
 
 ### Bug Fixes
 
-* mouse-up should not unhighlight annotations ([#305](https://github.com/cornerstonejs/cornerstone3D-beta/issues/305)) ([0ca9653](https://github.com/cornerstonejs/cornerstone3D-beta/commit/0ca96533d253c35534c9820e4174b54270483d5e))
-
-
-
-
+- mouse-up should not unhighlight annotations ([#305](https://github.com/cornerstonejs/cornerstone3D-beta/issues/305)) ([0ca9653](https://github.com/cornerstonejs/cornerstone3D-beta/commit/0ca96533d253c35534c9820e4174b54270483d5e))
 
 ## [0.29.6](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.29.5...@cornerstonejs/tools@0.29.6) (2022-11-21)
 
-
 ### Bug Fixes
 
-* annotation rendering engine on viewport removal ([#303](https://github.com/cornerstonejs/cornerstone3D-beta/issues/303)) ([aeb205e](https://github.com/cornerstonejs/cornerstone3D-beta/commit/aeb205e56e0d2068258c278863aa3d7447331a43))
-
-
-
-
+- annotation rendering engine on viewport removal ([#303](https://github.com/cornerstonejs/cornerstone3D-beta/issues/303)) ([aeb205e](https://github.com/cornerstonejs/cornerstone3D-beta/commit/aeb205e56e0d2068258c278863aa3d7447331a43))
 
 ## [0.29.5](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.29.4...@cornerstonejs/tools@0.29.5) (2022-11-19)
 
 **Note:** Version bump only for package @cornerstonejs/tools
 
-
-
-
-
 ## [0.29.4](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.29.3...@cornerstonejs/tools@0.29.4) (2022-11-18)
 
 **Note:** Version bump only for package @cornerstonejs/tools
-
-
-
-
 
 ## [0.29.3](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.29.2...@cornerstonejs/tools@0.29.3) (2022-11-17)
 
 **Note:** Version bump only for package @cornerstonejs/tools
 
-
-
-
-
 ## [0.29.2](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.29.1...@cornerstonejs/tools@0.29.2) (2022-11-16)
-
 
 ### Bug Fixes
 
-* revert synchronizer event firing being unnecessary async ([#299](https://github.com/cornerstonejs/cornerstone3D-beta/issues/299)) ([1e244d1](https://github.com/cornerstonejs/cornerstone3D-beta/commit/1e244d11778d74b66df671f936138c73adb5a699))
-
-
-
-
+- revert synchronizer event firing being unnecessary async ([#299](https://github.com/cornerstonejs/cornerstone3D-beta/issues/299)) ([1e244d1](https://github.com/cornerstonejs/cornerstone3D-beta/commit/1e244d11778d74b66df671f936138c73adb5a699))
 
 ## [0.29.1](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.29.0...@cornerstonejs/tools@0.29.1) (2022-11-14)
 
-
 ### Bug Fixes
 
-* reference line exports and add cpu demo ([#297](https://github.com/cornerstonejs/cornerstone3D-beta/issues/297)) ([e20d0b2](https://github.com/cornerstonejs/cornerstone3D-beta/commit/e20d0b25c5ff0aafab4fa541b38815b4bee412b2))
-
-
-
-
+- reference line exports and add cpu demo ([#297](https://github.com/cornerstonejs/cornerstone3D-beta/issues/297)) ([e20d0b2](https://github.com/cornerstonejs/cornerstone3D-beta/commit/e20d0b25c5ff0aafab4fa541b38815b4bee412b2))
 
 # [0.29.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.28.0...@cornerstonejs/tools@0.29.0) (2022-11-11)
 
-
 ### Features
 
-* add reference lines tool ([#292](https://github.com/cornerstonejs/cornerstone3D-beta/issues/292)) ([c56df91](https://github.com/cornerstonejs/cornerstone3D-beta/commit/c56df91a64ec005656f940dd3728f476152fa917))
-
-
-
-
+- add reference lines tool ([#292](https://github.com/cornerstonejs/cornerstone3D-beta/issues/292)) ([c56df91](https://github.com/cornerstonejs/cornerstone3D-beta/commit/c56df91a64ec005656f940dd3728f476152fa917))
 
 # [0.28.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.27.2...@cornerstonejs/tools@0.28.0) (2022-11-11)
 
-
 ### Features
 
-* Add segmentSpecificConfiguration and add outlineOpacity config for Segmentation ([#285](https://github.com/cornerstonejs/cornerstone3D-beta/issues/285)) ([92fb495](https://github.com/cornerstonejs/cornerstone3D-beta/commit/92fb49594cfc3219f761e905ba765acaddbe1e1a))
-* add stack synchronization within or across studies ([#291](https://github.com/cornerstonejs/cornerstone3D-beta/issues/291)) ([f38bec0](https://github.com/cornerstonejs/cornerstone3D-beta/commit/f38bec06713265cee361fc905539aa5ed841e707))
-
-
-
-
+- Add segmentSpecificConfiguration and add outlineOpacity config for Segmentation ([#285](https://github.com/cornerstonejs/cornerstone3D-beta/issues/285)) ([92fb495](https://github.com/cornerstonejs/cornerstone3D-beta/commit/92fb49594cfc3219f761e905ba765acaddbe1e1a))
+- add stack synchronization within or across studies ([#291](https://github.com/cornerstonejs/cornerstone3D-beta/issues/291)) ([f38bec0](https://github.com/cornerstonejs/cornerstone3D-beta/commit/f38bec06713265cee361fc905539aa5ed841e707))
 
 ## [0.27.2](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.27.1...@cornerstonejs/tools@0.27.2) (2022-11-10)
 
-
 ### Features
 
-* Add segmentSpecificConfiguration and add outlineOpacity config for Segmentation ([#285](https://github.com/cornerstonejs/cornerstone3D-beta/issues/285)) ([92fb495](https://github.com/cornerstonejs/cornerstone3D-beta/commit/92fb49594cfc3219f761e905ba765acaddbe1e1a))
-* add stack synchronization within or across studies ([#291](https://github.com/cornerstonejs/cornerstone3D-beta/issues/291)) ([f38bec0](https://github.com/cornerstonejs/cornerstone3D-beta/commit/f38bec06713265cee361fc905539aa5ed841e707))
-
-
-
-
+- Add segmentSpecificConfiguration and add outlineOpacity config for Segmentation ([#285](https://github.com/cornerstonejs/cornerstone3D-beta/issues/285)) ([92fb495](https://github.com/cornerstonejs/cornerstone3D-beta/commit/92fb49594cfc3219f761e905ba765acaddbe1e1a))
+- add stack synchronization within or across studies ([#291](https://github.com/cornerstonejs/cornerstone3D-beta/issues/291)) ([f38bec0](https://github.com/cornerstonejs/cornerstone3D-beta/commit/f38bec06713265cee361fc905539aa5ed841e707))
 
 ## [0.27.2](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.27.1...@cornerstonejs/tools@0.27.2) (2022-11-10)
 
@@ -211,36 +213,19 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @cornerstonejs/tools
 
-
-
-
-
 # [0.27.0](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.26.5...@cornerstonejs/tools@0.27.0) (2022-11-07)
-
 
 ### Features
 
-* add annotation display Tool ([#283](https://github.com/cornerstonejs/cornerstone3D-beta/issues/283)) ([e4a0324](https://github.com/cornerstonejs/cornerstone3D-beta/commit/e4a0324840f8f5ac29f9db292e8df0c59ee69322))
-
-
-
-
+- add annotation display Tool ([#283](https://github.com/cornerstonejs/cornerstone3D-beta/issues/283)) ([e4a0324](https://github.com/cornerstonejs/cornerstone3D-beta/commit/e4a0324840f8f5ac29f9db292e8df0c59ee69322))
 
 ## [0.26.5](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.26.4...@cornerstonejs/tools@0.26.5) (2022-11-04)
 
 **Note:** Version bump only for package @cornerstonejs/tools
 
-
-
-
-
 ## [0.26.4](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.26.3...@cornerstonejs/tools@0.26.4) (2022-11-04)
 
 **Note:** Version bump only for package @cornerstonejs/tools
-
-
-
-
 
 ## [0.26.3](https://github.com/cornerstonejs/cornerstone3D-beta/compare/@cornerstonejs/tools@0.26.2...@cornerstonejs/tools@0.26.3) (2022-11-04)
 

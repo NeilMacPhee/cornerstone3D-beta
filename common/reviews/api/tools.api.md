@@ -556,7 +556,15 @@ type BoundsIJK = [Types_2.Point2, Types_2.Point2, Types_2.Point2];
 export class BrushTool extends BaseTool {
     constructor(toolProps?: PublicToolProps, defaultToolProps?: ToolProps);
     // (undocumented)
+    invalidateBrushCursor(): void;
+    // (undocumented)
     mouseMoveCallback: (evt: EventTypes_2.MouseMoveEventType) => void;
+    // (undocumented)
+    onSetToolDisabled: () => void;
+    // (undocumented)
+    onSetToolEnabled: () => void;
+    // (undocumented)
+    onSetToolPassive: () => void;
     // (undocumented)
     preMouseDownCallback: (evt: EventTypes_2.MouseDownActivateEventType) => boolean;
     // (undocumented)
@@ -1661,6 +1669,26 @@ type FlipDirection = {
 };
 
 // @public (undocumented)
+function floodFill(getter: FloodFillGetter, seed: Types_2.Point2 | Types_2.Point3, options?: FloodFillOptions): FloodFillResult;
+
+// @public (undocumented)
+type FloodFillGetter = FloodFillGetter2D | FloodFillGetter3D;
+
+// @public (undocumented)
+type FloodFillOptions = {
+    onFlood?: (x: any, y: any) => void;
+    onBoundary?: (x: any, y: any) => void;
+    equals?: (a: any, b: any) => boolean;
+    diagonals?: boolean;
+};
+
+// @public (undocumented)
+type FloodFillResult = {
+    flooded: Types_2.Point2[] | Types_2.Point3[];
+    boundaries: Types_2.Point2[] | Types_2.Point3[];
+};
+
+// @public (undocumented)
 class FrameOfReferenceSpecificAnnotationManager {
     constructor(uid?: string);
     // (undocumented)
@@ -1740,6 +1768,12 @@ function getBoundingBoxAroundShape(points: Types_2.Point3[], dimensions?: Types_
 
 // @public (undocumented)
 function getBoundsIJKFromRectangleAnnotations(annotations: any, referenceVolume: any, options?: Options): any;
+
+// @public (undocumented)
+function getBrushSizeForToolGroup(toolGroupId: string): void;
+
+// @public (undocumented)
+function getBrushThresholdForToolGroup(toolGroupId: string): any;
 
 // @public (undocumented)
 function getCanvasEllipseCorners(ellipseCanvasPoints: canvasCoordinates): Array<Types_2.Point2>;
@@ -2366,10 +2400,17 @@ type IToolBinding = {
 };
 
 // @public (undocumented)
+type IToolClassReference = new <T extends BaseTool>(config: any) => T;
+
+// @public (undocumented)
 interface IToolGroup {
     // (undocumented)
     addTool: {
         (toolName: string, toolConfiguration?: any): void;
+    };
+    // (undocumented)
+    addToolInstance: {
+        (ttoolName: string, parentClassName: string, configuration?: any): void;
     };
     // (undocumented)
     addViewport: {
@@ -3028,6 +3069,15 @@ type OrientationVectors = {
 };
 
 // @public (undocumented)
+export class PaintFillTool extends BaseTool {
+    constructor(toolProps?: PublicToolProps, defaultToolProps?: ToolProps);
+    // (undocumented)
+    preMouseDownCallback: (evt: EventTypes_2.MouseDownActivateEventType) => boolean;
+    // (undocumented)
+    static toolName: any;
+}
+
+// @public (undocumented)
 export class PanTool extends BaseTool {
     constructor(toolProps?: PublicToolProps, defaultToolProps?: ToolProps);
     // (undocumented)
@@ -3501,7 +3551,7 @@ export class RectangleROIThresholdTool extends RectangleROITool {
 }
 
 // @public (undocumented)
-function rectangleROIThresholdVolumeByRange(annotationUIDs: string[], segmentationVolume: Types_2.IImageVolume, referenceVolumes: Types_2.IImageVolume[], options: ThresholdRangeOptions_2): Types_2.IImageVolume;
+function rectangleROIThresholdVolumeByRange(annotationUIDs: string[], segmentationVolume: Types_2.IImageVolume, thresholdVolumeInformation: ThresholdInformation_2[], options: ThresholdOptions): Types_2.IImageVolume;
 
 // @public (undocumented)
 export class RectangleROITool extends AnnotationTool {
@@ -3816,7 +3866,12 @@ declare namespace segmentation_2 {
         getDefaultRepresentationConfig,
         createLabelmapVolumeForViewport,
         rectangleROIThresholdVolumeByRange,
-        triggerSegmentationRender
+        triggerSegmentationRender,
+        floodFill,
+        getBrushSizeForToolGroup,
+        setBrushSizeForToolGroup,
+        getBrushThresholdForToolGroup,
+        setBrushThresholdForToolGroup
     }
 }
 
@@ -3957,6 +4012,12 @@ function setAnnotationSelected(annotationUID: string, selected?: boolean, preser
 
 // @public (undocumented)
 function setAnnotationVisibility(annotationUID: string, visible?: boolean): void;
+
+// @public (undocumented)
+function setBrushSizeForToolGroup(toolGroupId: string, brushSize: number): void;
+
+// @public (undocumented)
+function setBrushThresholdForToolGroup(toolGroupId: string, threshold: Types_2.Point2): void;
 
 // @public (undocumented)
 function setColorForSegmentIndex(toolGroupId: string, segmentationRepresentationUID: string, segmentIndex: number, color: Color): void;
@@ -4313,7 +4374,7 @@ type TextBoxHandle = {
 };
 
 // @public (undocumented)
-function thresholdVolumeByRange(segmentationVolume: Types_2.IImageVolume, referenceVolume: Types_2.IImageVolume, options: ThresholdRangeOptions): Types_2.IImageVolume;
+function thresholdVolumeByRange(segmentationVolume: Types_2.IImageVolume, thresholdVolumeInformation: ThresholdInformation[], options: ThresholdRangeOptions): Types_2.IImageVolume;
 
 // @public (undocumented)
 function throttle(func: Function, wait?: number, options?: {
@@ -4516,6 +4577,7 @@ declare namespace Types {
         ToolOptionsType,
         InteractionTypes,
         IToolGroup,
+        IToolClassReference,
         ISynchronizerEventHandler,
         ToolHandle,
         AnnotationHandle,
@@ -4537,7 +4599,10 @@ declare namespace Types {
         ScrollOptions_2 as ScrollOptions,
         CINETypes,
         BoundsIJK,
-        SVGDrawingHelper
+        SVGDrawingHelper,
+        FloodFillResult,
+        FloodFillGetter,
+        FloodFillOptions
     }
 }
 export { Types }
@@ -4608,6 +4673,30 @@ type ViewportInputOptions = {
     orientation?: OrientationAxis | OrientationVectors;
     suppressEvents?: boolean;
 };
+
+// @public (undocumented)
+interface ViewportPreset {
+    // (undocumented)
+    ambient: string;
+    // (undocumented)
+    colorTransfer: string;
+    // (undocumented)
+    diffuse: string;
+    // (undocumented)
+    gradientOpacity: string;
+    // (undocumented)
+    interpolation: string;
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    scalarOpacity: string;
+    // (undocumented)
+    shade: string;
+    // (undocumented)
+    specular: string;
+    // (undocumented)
+    specularPower: string;
+}
 
 declare namespace visibility {
     export {
