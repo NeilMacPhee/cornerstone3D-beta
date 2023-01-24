@@ -1,4 +1,4 @@
-import { RenderingEngine, Types, Enums } from '@cornerstonejs/core';
+import { Types, Enums, RenderingEngine } from '@cornerstonejs/core';
 import {
   initDemo,
   createImageIdsAndCacheMetaData,
@@ -18,6 +18,7 @@ const {
   ToolGroupManager,
   ScaleOverlayTool,
   LengthTool,
+  StackScrollMouseWheelTool,
   Enums: csToolsEnums,
 } = cornerstoneTools;
 
@@ -27,7 +28,7 @@ const { MouseBindings } = csToolsEnums;
 // ======== Set up page ======== //
 setTitleAndDescription(
   'Scale Overlay Tool',
-  'Magnify Tool to zoom in in part of the viewport (StackViewport only as of now)'
+  'Set scale location using dropdown menu, zoom by holding right mouse down'
 );
 
 const content = document.getElementById('content');
@@ -43,7 +44,8 @@ element.style.height = '500px';
 content.appendChild(element);
 
 const instructions = document.createElement('p');
-instructions.innerText = 'Left Click to use selected tool';
+instructions.innerText =
+  'Left Click: Window/Level\nRight Click: Zoom\n Mouse Wheel: Stack Scroll';
 
 content.append(instructions);
 // ============================= //
@@ -84,15 +86,10 @@ async function run() {
   cornerstoneTools.addTool(ZoomTool);
   cornerstoneTools.addTool(ScaleOverlayTool);
   cornerstoneTools.addTool(LengthTool);
+  cornerstoneTools.addTool(StackScrollMouseWheelTool);
 
   // Create a stack viewport
-  const viewportId = 'CT_STACK';
-  const viewportInput = {
-    viewportId,
-    type: ViewportType.STACK,
-    element,
-  };
-
+  // const viewportId = 'CT_STACK';
   // Define a tool group, which defines how mouse events map to tool commands for
   // Any viewport using the group
   toolGroup = ToolGroupManager.createToolGroup(toolGroupId);
@@ -101,9 +98,8 @@ async function run() {
   toolGroup.addTool(PanTool.toolName);
   toolGroup.addTool(ZoomTool.toolName);
   toolGroup.addTool(LengthTool.toolName);
-  toolGroup.addTool(ScaleOverlayTool.toolName, {
-    sourceViewportId: viewportId,
-  });
+  toolGroup.addTool(StackScrollMouseWheelTool.toolName);
+  toolGroup.addTool(ScaleOverlayTool.toolName);
 
   // Set the initial state of the tools, here we set one tool active on left click.
   // This means left click will draw that tool.
@@ -116,14 +112,6 @@ async function run() {
     ],
   });
 
-  toolGroup.setToolActive(PanTool.toolName, {
-    bindings: [
-      {
-        mouseButton: MouseBindings.Auxiliary, // Middle Click
-      },
-    ],
-  });
-
   toolGroup.setToolActive(ZoomTool.toolName, {
     bindings: [
       {
@@ -132,23 +120,33 @@ async function run() {
     ],
   });
 
-  toolGroup.setToolEnabled(ScaleOverlayTool.toolName);
+  toolGroup.setToolActive(StackScrollMouseWheelTool.toolName);
 
-  // setTimeout(setScaleEnabled, 1500);
+  toolGroup.setToolEnabled(ScaleOverlayTool.toolName);
 
   // Get Cornerstone imageIds and fetch metadata into RAM
   const imageIds = await createImageIdsAndCacheMetaData({
     StudyInstanceUID:
-      '1.3.6.1.4.1.14519.5.2.1.7009.2403.334240657131972136850343327463',
+      '1.3.6.1.4.1.14519.5.2.1.7311.5101.158323547117540061132729905711',
     SeriesInstanceUID:
-      '1.3.6.1.4.1.14519.5.2.1.7009.2403.226151125820845824875394858561',
-    wadoRsRoot: 'https://d3t6nz73ql33tx.cloudfront.net/dicomweb',
+      '1.3.6.1.4.1.14519.5.2.1.7311.5101.250911858840767891342974687368',
+    wadoRsRoot: 'https://domvja9iplmyu.cloudfront.net/dicomweb',
     type: 'STACK',
   });
 
   // Instantiate a rendering engine
   const renderingEngineId = 'myRenderingEngine';
   const renderingEngine = new RenderingEngine(renderingEngineId);
+
+  const viewportId = 'CT_STACK';
+  const viewportInput = {
+    viewportId,
+    type: ViewportType.STACK,
+    element,
+    defaultOptions: {
+      background: <Types.Point3>[0.2, 0, 0.2],
+    },
+  };
 
   renderingEngine.enableElement(viewportInput);
 
@@ -161,7 +159,7 @@ async function run() {
   );
 
   // Define a stack containing a single image
-  const stack = [imageIds[0]];
+  const stack = [imageIds[0], imageIds[1], imageIds[2]];
 
   // Set the stack on the viewport
   viewport.setStack(stack);
