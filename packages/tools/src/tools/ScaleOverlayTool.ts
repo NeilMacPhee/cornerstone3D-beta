@@ -48,7 +48,6 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
   constructor(
     toolProps: PublicToolProps = {},
     defaultToolProps: ToolProps = {
-      supportedInteractionTypes: ['Mouse', 'Touch'],
       configuration: {
         viewportId: '',
         scaleLocation: 'bottom',
@@ -70,7 +69,13 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     let viewports = renderingEngine.getViewports();
     viewports = filterViewportsWithToolEnabled(viewports, this.getToolName());
 
-    const viewport = viewports[0];
+    let viewport = viewports[0];
+
+    if (this.configuration.viewportId) {
+      viewport = viewports.find(
+        (viewportId) => viewportId.id === this.configuration.viewportId
+      );
+    }
 
     if (!viewport) {
       return;
@@ -112,8 +117,6 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       renderingEngine,
       annotation,
     };
-
-    // triggerAnnotationRenderForViewportIds(renderingEngine, viewports);
   };
 
   onSetToolEnabled = (): void => {
@@ -121,10 +124,9 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
   };
 
   onCameraModified = (evt: Types.EventTypes.CameraModifiedEvent): void => {
-    // If the camera is modified, we need to update the reference lines
-    // we really don't care which viewport triggered the
-    // camera modification, since we want to update all of them
-    // with respect to the targetViewport
+    // If the camera is modified, we need to update the viewport
+    // that the camera was modified on
+    this.configuration.viewportId = evt.target.dataset.viewportUid;
     this._init();
   };
 
@@ -164,19 +166,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
 
     let rowPixelSpacing = image.spacing[0];
     let colPixelSpacing = image.spacing[1];
-    let currentView;
     const imagePlane = metaData.get('imagePlaneModule', imageId);
-
-    // for (let k = 0; k < Object.keys(imageOrientationViews).length; k++) {
-    //   if (
-    //     imagePlane.imageOrientationPatient.toString() ===
-    //     Object.values(imageOrientationViews)[k].toString()
-    //   ) {
-    //     currentView = Object.keys(imageOrientationViews)[k];
-    //   }
-    // }
-
-    // console.log(currentView);
 
     // if imagePlane exists, set row and col pixel spacing
     if (imagePlane) {
@@ -209,7 +199,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     const worldWidthViewport = vec3.distance(bottomLeft, bottomRight);
     const worldHeightViewport = vec3.distance(topLeft, bottomLeft);
 
-    // 0.1 and 0.05 gives margin to horizontal and vertical lines
+    // 0.05 gives margin to horizontal and vertical lines
     const hscaleBounds = this.computeScaleBounds(
       canvasSize,
       0.05,
@@ -254,16 +244,15 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
     styleSpecifier.annotationUID = annotationUID;
     const lineWidth = this.getStyle('lineWidth', styleSpecifier, annotation);
     const lineDash = this.getStyle('lineDash', styleSpecifier, annotation);
-    // const color = this.configuration.scaleColor;
     const color = this.getStyle('color', styleSpecifier, annotation);
     const shadow = this.getStyle('shadow', styleSpecifier, annotation);
 
-    const dataId = `${annotationUID}-line`;
-    const lineUID = '1';
+    const scaleId = `${annotationUID}-scaleline`;
+    const scaleLineUID = '1';
     drawLineSvg(
       svgDrawingHelper,
       annotationUID,
-      lineUID,
+      scaleLineUID,
       scaleCanvasCoordinates[0],
       scaleCanvasCoordinates[1],
       {
@@ -272,7 +261,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
         lineDash,
         shadow,
       },
-      dataId
+      scaleId
     );
     const leftTickId = `${annotationUID}-left`;
     const leftTickUID = '2';
@@ -281,8 +270,8 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       svgDrawingHelper,
       annotationUID,
       leftTickUID,
-      scaleTicks.endTick1[0],
-      scaleTicks.endTick1[1],
+      scaleTicks.endTick1[0] as Types.Point2,
+      scaleTicks.endTick1[1] as Types.Point2,
       {
         color,
         width: lineWidth,
@@ -298,8 +287,8 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       svgDrawingHelper,
       annotationUID,
       rightTickUID,
-      scaleTicks.endTick2[0],
-      scaleTicks.endTick2[1],
+      scaleTicks.endTick2[0] as Types.Point2,
+      scaleTicks.endTick2[1] as Types.Point2,
       {
         color,
         width: lineWidth,
@@ -320,7 +309,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       scaleCanvasCoordinates[0][0] + locationTextOffest[location][0],
       scaleCanvasCoordinates[0][1] + locationTextOffest[location][1],
     ];
-    const textLines = this._getTextLines(scaleSize);
+    const textBoxLines = this._getTextLines(scaleSize);
 
     const { tickIds, tickUIDs, tickCoordinates } = this.computeInnerScaleTicks(
       scaleSize,
@@ -348,12 +337,12 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       );
     }
 
-    const textUID = '0';
+    const textUID = 'text0';
     drawTextBoxSvg(
       svgDrawingHelper,
       annotationUID,
       textUID,
-      textLines,
+      textBoxLines,
       [textCanvasCoordinates[0], textCanvasCoordinates[1]],
       {
         fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
@@ -569,19 +558,6 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
           Math.pow(topBottomVec[1], 2) +
           Math.pow(topBottomVec[2], 2)
       );
-
-    const testest = [
-      vec3.add(
-        vec3.create(),
-        midpoint,
-        topBottomVec.map((i) => i * offset) as Types.Point3
-      ),
-      vec3.subtract(
-        vec3.create(),
-        midpoint,
-        topBottomVec.map((i) => i * offset) as Types.Point3
-      ),
-    ];
 
     if (location == 'top' || location == 'bottom') {
       worldCoordinates = [
