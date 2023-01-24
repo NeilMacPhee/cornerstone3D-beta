@@ -1146,11 +1146,14 @@ type ScalingParameters = {
     suvbsa?: number;
 };
 
-// @public (undocumented)
-export function sharedArrayBufferImageLoader(imageId: string, options?: Record<string, any>): {
-    promise: Promise<Record<string, any>>;
-    cancelFn: () => void;
-};
+// @public
+enum SharedArrayBufferModes {
+    AUTO = 'auto',
+    // (undocumented)
+    FALSE = 'false',
+    // (undocumented)
+    TRUE = 'true',
+}
 
 // @public
 type StackNewImageEvent = CustomEvent_2<StackNewImageEventDetail>;
@@ -1213,11 +1216,12 @@ export class StreamingImageVolume extends ImageVolume {
         imageIdIndex: number;
         options: {
             targetBuffer: {
-                arrayBuffer: ArrayBufferLike;
+                arrayBuffer: SharedArrayBuffer;
                 offset: number;
                 length: number;
                 type: any;
             };
+            skipCreateImage: boolean;
             preScale: {
                 enabled: boolean;
                 scalingParameters: Types.ScalingParameters;
@@ -1250,11 +1254,37 @@ type ViewportInputOptions = {
     suppressEvents?: boolean;
 };
 
+// @public (undocumented)
+interface ViewportPreset {
+    // (undocumented)
+    ambient: string;
+    // (undocumented)
+    colorTransfer: string;
+    // (undocumented)
+    diffuse: string;
+    // (undocumented)
+    gradientOpacity: string;
+    // (undocumented)
+    interpolation: string;
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    scalarOpacity: string;
+    // (undocumented)
+    shade: string;
+    // (undocumented)
+    specular: string;
+    // (undocumented)
+    specularPower: string;
+}
+
 // @public
 enum ViewportType {
     ORTHOGRAPHIC = 'orthographic',
     PERSPECTIVE = 'perspective',
     STACK = 'stack',
+    // (undocumented)
+    VOLUME_3D = 'volume3d',
 }
 
 // @public (undocumented)

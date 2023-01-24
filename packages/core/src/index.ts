@@ -9,6 +9,7 @@ import {
 } from './RenderingEngine';
 import RenderingEngine from './RenderingEngine';
 import VolumeViewport from './RenderingEngine/VolumeViewport';
+import BaseVolumeViewport from './RenderingEngine/BaseVolumeViewport';
 import StackViewport from './RenderingEngine/StackViewport';
 import Viewport from './RenderingEngine/Viewport';
 import eventTarget from './eventTarget';
@@ -28,9 +29,12 @@ import * as metaData from './metaData';
 import {
   init,
   getShouldUseCPURendering,
+  getShouldUseSharedArrayBuffer,
   isCornerstoneInitialized,
   setUseCPURendering,
+  setUseSharedArrayBuffer,
   resetUseCPURendering,
+  resetUseSharedArrayBuffer,
 } from './init';
 
 // Classes
@@ -62,6 +66,7 @@ export {
   //
   Settings,
   // Rendering Engine
+  BaseVolumeViewport,
   VolumeViewport,
   Viewport,
   StackViewport,
@@ -100,4 +105,8 @@ export {
   getShouldUseCPURendering,
   setUseCPURendering,
   resetUseCPURendering,
+  // SharedArrayBuffer
+  getShouldUseSharedArrayBuffer,
+  setUseSharedArrayBuffer,
+  resetUseSharedArrayBuffer,
 };
