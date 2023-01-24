@@ -206,6 +206,7 @@ class ScaleOverlayTool extends AnnotationDisplayTool {
       0.05,
       location
     );
+
     const vscaleBounds = this.computeScaleBounds(
       canvasSize,
       0.05,
